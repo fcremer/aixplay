@@ -180,7 +180,7 @@ header {
     position: fixed;
     bottom: 0;
 }
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
     .container {
         flex-direction: column;
     }
