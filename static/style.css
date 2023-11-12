@@ -184,7 +184,12 @@ header {
     .container {
         flex-direction: column;
     }
-
+    body{
+        -webkit-text-size-adjust: 100%;
+     }
+    html {
+        font-size: 12px;
+    }
     #total-highscores, #pinball-highscores {
         width: 90%;
         margin-bottom: 20px;
