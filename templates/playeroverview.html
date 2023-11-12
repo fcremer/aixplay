@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Overview</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='playeroverview.js') }}"></script>
+</head>
+<body>
+    <div class="player-overview">
+        <h2>Spielerübersicht</h2>
+        <select id="player-select" onchange="fetchPlayerData()"></select>
+        <h3 id="player-name"></h3>
+        <h4 id="player-abbreviation"></h4>
+        <p id="played-dates"></p>
+        <div id="not-played-machines"></div>
+    </div>
+</body>
+</html>

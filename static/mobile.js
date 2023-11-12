@@ -1,0 +1,80 @@
+document.addEventListener('DOMContentLoaded', function() {
+    loadPlayers();
+    loadPinballMachines();
+});
+
+function loadPlayers() {
+    fetch('/players')
+        .then(response => response.json())
+        .then(players => {
+            const playerSelect = document.getElementById('player-select');
+            players.forEach(player => {
+                const option = document.createElement('option');
+                option.value = player.abbreviation;
+                option.textContent = player.name;
+                playerSelect.appendChild(option);
+            });
+        });
+}
+
+function loadPinballMachines() {
+    fetch('/pinball')
+        .then(response => response.json())
+        .then(pinballMachines => {
+            const pinballSelect = document.getElementById('pinball-select');
+            const groupedMachines = groupByRoom(pinballMachines);
+
+            Object.keys(groupedMachines).forEach(room => {
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = `Raum ${room}`;
+                groupedMachines[room].forEach(machine => {
+                    const option = document.createElement('option');
+                    option.value = machine.abbreviation;
+                    option.textContent = machine.long_name;
+                    optgroup.appendChild(option);
+                });
+                pinballSelect.appendChild(optgroup);
+            });
+        });
+}
+
+function groupByRoom(pinballMachines) {
+    const groups = {};
+    pinballMachines.forEach(machine => {
+        if (!groups[machine.room]) {
+            groups[machine.room] = [];
+        }
+        groups[machine.room].push(machine);
+    });
+    return groups;
+}
+
+function submitScore() {
+    const player = document.getElementById('player-select').value;
+    const pinball = document.getElementById('pinball-select').value;
+    const score = document.getElementById('score-input').value;
+
+    // Ermitteln des heutigen Datums im Format YYYY-MM-DD
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0];
+
+    fetch('/score', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            player_abbreviation: player,
+            pinball_abbreviation: pinball,
+            points: parseInt(score, 10),
+            date: formattedDate
+        })
+    })
+    .then(response => {
+        if (response.ok) {
+            alert('Score erfolgreich gespeichert!');
+        } else {
+            alert('Fehler beim Speichern des Scores.');
+        }
+    });
+}

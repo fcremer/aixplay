@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Pinball Score Entry</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='mobile.css') }}">
+    <script src="{{ url_for('static', filename='mobile.js') }}"></script>
+</head>
+<body>
+    <div class="score-entry">
+        <h2>Score Eintrag</h2>
+        <select id="player-select"></select>
+        <select id="pinball-select"></select>
+        <input type="number" id="score-input" placeholder="Punktestand">
+        <button onclick="submitScore()">Score speichern</button>
+    </div>
+</body>
+</html>

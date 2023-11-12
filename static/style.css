@@ -1,0 +1,40 @@
+body, html {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+}
+
+.column {
+    padding: 20px;
+}
+
+#total-highscores {
+    width: 25%;
+    background-color: #f0f0f0;
+}
+
+#pinball-highscores {
+    width: 75%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+th, td {
+    padding: 5px;
+    text-align: left;
+}
+
+thead {
+    background-color: #f0f0f0;
+}

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pinball Highscores</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body>
+    <div class="container">
+        <div id="total-highscores" class="column">
+            <h2>Season Highscore</h2>
+            <ul id="total-highscore-list"></ul>
+        </div>
+        <div id="pinball-highscores" class="column">
+            <h2>Machine Highscores</h2>
+            <div id="pinball-highscore-content"></div>
+            <div id="players-container"></div>
+        </div>
+    </div>
+</body>
+</html>
