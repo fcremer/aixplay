@@ -913,3 +913,7 @@ scores:
   pinball_abbreviation: WW
   player_abbreviation: FC
   points: 10000000
+- date: '2023-11-12'
+  pinball_abbreviation: DW
+  player_abbreviation: FC
+  points: 55555555555

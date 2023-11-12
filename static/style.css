@@ -1,11 +1,17 @@
 body, html {
-    font-family: Arial, sans-serif;
+    font-family: 'Fira Sans', sans-serif; /* Aktualisierung der Schriftart */
     margin: 0;
     padding: 0;
+    background-color: #f4f4f4; /* Leichter Hintergrund für einen modernen Look */
+    color: #333; /* Dunklere Schriftfarbe für bessere Lesbarkeit */
 }
 
 .container {
     display: flex;
+    width: 90%; /* Zentrieren und Begrenzen der Breite für besseres Layout */
+    max-width: 1200px; /* Maximale Breite für große Bildschirme */
+    margin: auto; /* Automatische Ränder für Zentrierung */
+    padding: 20px; /* Padding für den inneren Abstand */
 }
 
 .column {
@@ -13,28 +19,74 @@ body, html {
 }
 
 #total-highscores {
-    width: 25%;
-    background-color: #f0f0f0;
+    width: 35%;
+    background-color: #ffffff; /* Helles Design für den Container */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Leichter Schatten für Tiefe */
 }
 
 #pinball-highscores {
-    width: 75%;
+    width: 65%;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 20px; /* Abstand von der Überschrift */
 }
 
 table, th, td {
-    border: 1px solid black;
+    border: 1px solid #ddd; /* Hellerer Rand für einen subtileren Look */
 }
 
 th, td {
-    padding: 5px;
+    padding: 10px; /* Mehr Padding für besseren visuellen Abstand */
     text-align: left;
 }
 
 thead {
-    background-color: #f0f0f0;
+    background-color: #333; /* Dunklerer Hintergrund für Kopfzeilen */
+    color: #fff; /* Weiße Schriftfarbe für Kontrast */
+}
+
+h3 {
+    font-weight: 700;
+    color: #D23C29; /* Farbe der Überschriften */
+}
+
+select, input, button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.score-entry {
+    max-width: 400px;
+    margin: auto;
+}
+
+/* Responsive Design: Anpassungen für kleinere Bildschirme */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    #total-highscores, #pinball-highscores {
+        width: 100%;
+    }
+}
+
+
+header {
+    display: flex;
+    justify-content: flex-end; /* Logo rechtsbündig */
+    padding: 10px;
+    background-color: #ffffff; /* Hintergrundfarbe passend zum Logo Background */
+    /* Weitere Stil-Definitionen für den Header */
+}
+
+#header-logo {
+    height: 50px; /* oder eine andere passende Größe */
+    /* Weitere Stil-Definitionen für das Logo */
 }

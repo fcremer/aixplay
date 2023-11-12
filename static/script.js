@@ -31,15 +31,33 @@ function fetchTotalHighscores() {
 }
 
 function displayTotalHighscores(data) {
-    const list = document.getElementById('total-highscore-list');
-    list.innerHTML = '';
+    const table = document.getElementById('total-highscore-list');
+    const tbody = document.createElement('tbody');
+
     data.forEach(item => {
         const playerName = playerNamesMap[item.player] || item.player; // Vollständigen Namen verwenden
-        const listItem = document.createElement('li');
-        listItem.textContent = `${item.rank}: ${playerName} - ${item.total_points} Punkte`;
-        list.appendChild(listItem);
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${item.rank}</td>
+            <td>${playerName}</td>
+            <td>${item.total_points.toLocaleString()}</td>
+        `;
+        tbody.appendChild(row);
     });
+
+    // Löschen des alten Inhalts der Tabelle und Hinzufügen des neuen tbody
+//    table.innerHTML = `
+//        <thead>
+//            <tr>
+//                <th>#</th>
+//                <th>Player</th>
+//                <th>Points</th>x
+//            </tr>
+//        </thead>
+//    `;
+    table.appendChild(tbody);
 }
+
 
 function fetchPinballHighscores() {
     fetch('/pinball')
