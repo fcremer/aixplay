@@ -917,3 +917,7 @@ scores:
   pinball_abbreviation: DW
   player_abbreviation: FC
   points: 55555555555
+- date: '2023-11-12'
+  pinball_abbreviation: AI
+  player_abbreviation: AM
+  points: 99999999999

@@ -33,6 +33,7 @@ function fetchTotalHighscores() {
 function displayTotalHighscores(data) {
     const table = document.getElementById('total-highscore-list');
     const tbody = document.createElement('tbody');
+    table.classList.add('table-highscores');
 
     data.forEach(item => {
         const playerName = playerNamesMap[item.player] || item.player; // Vollständigen Namen verwenden
@@ -86,13 +87,20 @@ function displayPinballHighscores(machine, highscores) {
     const section = document.createElement('section');
     section.innerHTML = `<h3>${machine.long_name}</h3>`;
     const table = document.createElement('table');
-    // ... Tabelle Kopf ...
+    table.classList.add('table-highscores');
 
     const tbody = document.createElement('tbody');
-    highscores.slice(0,15).forEach(score => {
-        const playerName = playerNamesMap[score.player] || score.player; // Verwendet den vollen Namen, falls verfügbar
+    const today = new Date().toISOString().split('T')[0]; // Heutiges Datum im Format YYYY-MM-DD
+
+    highscores.slice(0, 15).forEach((score, index) => {
+        const playerName = playerNamesMap[score.player] || score.player;
         const row = document.createElement('tr');
+
+        // Umwandeln des Spielstanddatums in das Format YYYY-MM-DD für den Vergleich
+        const today = new Date().toISOString().split('T')[0];
+
         row.innerHTML = `
+            <td>${index + 1}</td>
             <td>${playerName}</td>
             <td>${score.score.toLocaleString()}</td>
         `;
@@ -103,3 +111,4 @@ function displayPinballHighscores(machine, highscores) {
     section.appendChild(table);
     container.appendChild(section);
 }
+

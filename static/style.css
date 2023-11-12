@@ -1,17 +1,16 @@
 body, html {
-    font-family: 'Fira Sans', sans-serif; /* Aktualisierung der Schriftart */
+    font-family: 'Fira Sans', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4; /* Leichter Hintergrund für einen modernen Look */
-    color: #333; /* Dunklere Schriftfarbe für bessere Lesbarkeit */
+    background-color: #f4f4f4;
+    color: #333;
 }
 
 .container {
     display: flex;
-    width: 90%; /* Zentrieren und Begrenzen der Breite für besseres Layout */
-    max-width: 1200px; /* Maximale Breite für große Bildschirme */
-    margin: auto; /* Automatische Ränder für Zentrierung */
-    padding: 20px; /* Padding für den inneren Abstand */
+    width: 90%;
+    margin: auto;
+    padding: 20px;
 }
 
 .column {
@@ -19,40 +18,62 @@ body, html {
 }
 
 #total-highscores {
-    width: 35%;
-    background-color: #ffffff; /* Helles Design für den Container */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Leichter Schatten für Tiefe */
-}
-
-#pinball-highscores {
-    width: 65%;
+    width: 25%;
     background-color: #ffffff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-table {
+#pinball-highscores {
+    width: 85%;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Allgemeines Tabellendesign */
+.table-highscores {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px; /* Abstand von der Überschrift */
 }
 
-table, th, td {
-    border: 1px solid #ddd; /* Hellerer Rand für einen subtileren Look */
-}
-
-th, td {
-    padding: 10px; /* Mehr Padding für besseren visuellen Abstand */
+.table-highscores th, .table-highscores td {
+    border: 1px solid #ddd;
+    padding: 8px;
     text-align: left;
 }
 
-thead {
-    background-color: #333; /* Dunklerer Hintergrund für Kopfzeilen */
-    color: #fff; /* Weiße Schriftfarbe für Kontrast */
+/* Festlegen der Breite für die Spalten */
+.table-highscores th:nth-child(1), .table-highscores td:nth-child(1) {
+    width: 10%;
 }
 
-h3 {
+.table-highscores th:nth-child(2), .table-highscores td:nth-child(2) {
+    width: 60%;
+}
+
+.table-highscores th:nth-child(3), .table-highscores td:nth-child(3) {
+    width: 30%;
+    text-align: right;
+}
+
+/* Stil für den Tabellenkopf */
+.table-highscores thead {
+    background-color: #333;
+    color: #fff;
+}
+
+/* Zebra-Streifen für die Tabellenzeilen */
+.table-highscores tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Fettgedruckter Text für heutige Spielstände */
+.today-score {
+    font-weight: bold;
+}
+
+h1, h2, h3 {
     font-weight: 700;
-    color: #D23C29; /* Farbe der Überschriften */
+    color: #D23C29;
 }
 
 select, input, button {
@@ -66,7 +87,17 @@ select, input, button {
     margin: auto;
 }
 
-/* Responsive Design: Anpassungen für kleinere Bildschirme */
+header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+    background-color: #ffffff;
+}
+
+#header-logo {
+    height: 50px;
+}
+
 @media (max-width: 768px) {
     .container {
         flex-direction: column;
@@ -75,18 +106,4 @@ select, input, button {
     #total-highscores, #pinball-highscores {
         width: 100%;
     }
-}
-
-
-header {
-    display: flex;
-    justify-content: flex-end; /* Logo rechtsbündig */
-    padding: 10px;
-    background-color: #ffffff; /* Hintergrundfarbe passend zum Logo Background */
-    /* Weitere Stil-Definitionen für den Header */
-}
-
-#header-logo {
-    height: 50px; /* oder eine andere passende Größe */
-    /* Weitere Stil-Definitionen für das Logo */
 }
