@@ -15,28 +15,28 @@
   </header>
    <div class="container">
        <div class="player-overview">
-            <h2>Spielerübersicht</h2>
+            <h2>Player details</h2>
             <select id="player-select" onchange="fetchPlayerData()"></select>
             <h3 id="player-name"></h3>
             <h4 id="player-abbreviation"></h4>
             <p id="played-dates"></p>
-       <table id="played-machines-table" class="table-highscores">
-        <thead>
-            <tr>
-                <th>played machines</th>
-                <th>#</th>
-            </tr>
-        </thead>
-        <tbody id="played-machines"></tbody>
-    </table>
        <table id="not-played-machines-table" class="table-highscores">
             <thead>
                 <tr>
-                    <th>Nicht gespielte Maschinen</th>
+                    <th>pending</th>
                 </tr>
             </thead>
             <tbody id="not-played-machines"></tbody>
        </table>
+       <table id="played-machines-table" class="table-highscores">
+        <thead>
+            <tr>
+                <th>scored</th>
+                <th>Rank</th>
+            </tr>
+        </thead>
+        <tbody id="played-machines"></tbody>
+    </table>
         </div>
    </div>
 </body>

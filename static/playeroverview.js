@@ -10,7 +10,7 @@ function loadPlayers() {
         .then(response => response.json())
         .then(players => {
             const playerSelect = document.getElementById('player-select');
-            playerSelect.innerHTML = '<option value="">Spieler wählen</option>';
+            playerSelect.innerHTML = '<option value="">select player</option>';
             players.forEach(player => {
                 const option = document.createElement('option');
                 option.value = player.abbreviation;
@@ -50,7 +50,7 @@ function fetchPlayerData() {
 function displayPlayerData(playerData) {
     document.getElementById('player-name').textContent = playerData.player_info.name || '';
     document.getElementById('player-abbreviation').textContent = playerData.player_info.abbreviation || '';
-    document.getElementById('played-dates').textContent = 'Gespielte Tage: ' + playerData.played_dates;
+    document.getElementById('played-dates').textContent = 'rated match days in season: ' + playerData.played_dates;
 
     const notPlayedMachinesTableBody = document.getElementById('not-played-machines');
     notPlayedMachinesTableBody.innerHTML = ''; // Leeren des bestehenden Inhalts

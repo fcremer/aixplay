@@ -73,6 +73,9 @@ def get_player(player_abbreviation):
         rank = next((index for index, s in enumerate(machine_scores, start=1) if s['player_abbreviation'] == player_abbreviation), None)
         played_machines_info.append({'machine': machine, 'rank': rank})
 
+    # Sortieren der gespielten Maschinen nach Rang in absteigender Reihenfolge
+    played_machines_info.sort(key=lambda x: x['rank'], reverse=True)
+
     all_machines = set(machine['abbreviation'] for machine in data['pinball_machines'])
     not_played_machines = all_machines - played_machines
 
@@ -82,6 +85,7 @@ def get_player(player_abbreviation):
         'not_played_machines': list(not_played_machines),
         'played_dates': len(played_dates)  # Anzahl der einzigartigen Spieltage
     })
+
 
 
 

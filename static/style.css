@@ -8,7 +8,7 @@ body, html {
 
 .container {
     display: flex;
-    width: 90%;
+    width: 98%;
     margin: auto;
     padding: 20px;
 }
@@ -46,13 +46,13 @@ body, html {
 
 
 #total-highscores {
-    width: 25%;
+    width: 35%;
     background-color: #ffffff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 #pinball-highscores {
-    width: 85%;
+    width: 65%;
     background-color: #ffffff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
