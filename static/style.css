@@ -41,7 +41,7 @@ body, html {
 }
 
 .submit-button:hover {
-    background-color: #D23C29;
+    background-color: #e52617;
 }
 
 #total-highscores {
@@ -96,7 +96,7 @@ body, html {
 
 h1, h2, h3 {
     font-weight: 700;
-    color: #D23C29;
+    color: #e52617;
 }
 
 select, input, button {
@@ -139,11 +139,11 @@ header {
 }
 
 .menu a:hover i {
-    color: #D23C29; /* Farbe des Icons beim Hover */
+    color: #e52617; /* Farbe des Icons beim Hover */
 }
 
 .menu a:hover {
-    color: #D23C29;
+    color: #e52617;
 }
 
 #header-logo {
@@ -167,7 +167,7 @@ header {
 
 #pinball-search:focus {
     outline: none;
-    border-color: #D23C29;
+    border-color: #e52617;
     box-shadow: 0 0 8px rgba(210, 60, 41, 0.6);
 }
 
@@ -185,8 +185,8 @@ header {
         flex-direction: column;
     }
 
-    html {
-        font-size: 14px;
+    .table-highscores th, .table-highscores td {
+        font-size: 1em; /* Größere Schriftgröße in Tabellen */
     }
     #total-highscores, #pinball-highscores {
         width: 90%;
