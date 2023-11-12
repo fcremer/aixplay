@@ -15,10 +15,17 @@
     </header>
     <div class="score-entry">
         <h2>Add Score</h2>
-        <select id="player-select"></select>
-        <select id="pinball-select"></select>
-        <input type="number" id="score-input" placeholder="Punktestand">
-        <button onclick="submitScore()">submit</button>
+        <select id="player-select" class="score-input">
+            <option value="" disabled selected>select player</option>
+            <!-- Weitere Optionen werden hier hinzugefügt -->
+        </select>
+        <select id="pinball-select" class="score-input">
+            <option value="" disabled selected>select pinball</option>
+            <!-- Weitere Optionen werden hier hinzugefügt -->
+        </select>
+        <input type="text" id="score-input" class="score-input" placeholder="Punktestand" oninput="formatScoreInput(this)">
+        <button onclick="submitScore()" class="submit-button">submit</button>
+    </div>
     </div>
 </body>
 </html>

@@ -145,3 +145,29 @@ function displayFilteredPinballHighscores(searchText) {
             });
         });
 }
+
+// Intervall in Millisekunden (z.B. 60000 für eine Minute)
+const updateInterval = 60000;
+
+// Funktion zum Aktualisieren des Fortschrittsbalkens
+function updateProgressBar() {
+    const progressBar = document.getElementById('progress-bar');
+    let width = 0;
+    const interval = setInterval(() => {
+        if (width >= 100) {
+            clearInterval(interval);
+            // Hier können Sie die Funktion aufrufen, um die Daten neu zu laden
+        } else {
+            width++;
+            progressBar.style.width = width + '%';
+        }
+    }, updateInterval / 100);
+}
+
+// Initialer Aufruf der Funktion
+updateProgressBar();
+
+// Setzen Sie den Fortschrittsbalken zurück, wenn die Seite neu geladen wird
+setInterval(() => {
+    updateProgressBar();
+}, updateInterval);

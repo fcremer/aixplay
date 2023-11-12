@@ -78,3 +78,16 @@ function submitScore() {
         }
     });
 }
+
+function formatScoreInput(inputElement) {
+    // Ersetze alle Zeichen außer Zahlen und entferne führende Nullen
+    let value = inputElement.value.replace(/[^\d]/g, '').replace(/^0+/, '');
+
+    // Teile die Zahl in Gruppen von drei Ziffern
+    value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+    // Setze den formatierten Wert zurück ins Eingabefeld
+    inputElement.value = value;
+}
+
+
