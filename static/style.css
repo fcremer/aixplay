@@ -188,8 +188,8 @@ header {
     .table-highscores th, .table-highscores td {
         font-size: 2.5rem; /* Größere Schriftgröße in Tabellen */
     }
-    h1 {
-        size: 3 rem;
+    .h1 {
+        font-size: 3 rem;
     }
     #total-highscores, #pinball-highscores {
         width: 90%;
