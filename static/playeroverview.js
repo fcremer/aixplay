@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
-
     loadPlayers();
     loadPinballMachinesData();
 });
+
+let allPinballMachines = [];
 
 function loadPlayers() {
     fetch('/players')
@@ -51,14 +52,14 @@ function displayPlayerData(playerData) {
     document.getElementById('player-abbreviation').textContent = playerData.player_info.abbreviation || '';
     document.getElementById('played-dates').textContent = 'Gespielte Tage: ' + playerData.played_dates;
 
-    const notPlayedMachinesDiv = document.getElementById('not-played-machines');
-    notPlayedMachinesDiv.innerHTML = '<h4>Nicht gespielte Maschinen:</h4>';
+    const notPlayedMachinesTableBody = document.getElementById('not-played-machines');
+    notPlayedMachinesTableBody.innerHTML = ''; // Leeren des bestehenden Inhalts
 
     playerData.not_played_machines.forEach(abbreviation => {
         const machine = allPinballMachines.find(m => m.abbreviation === abbreviation);
         const machineName = machine ? machine.long_name : 'Unbekannte Maschine';
-        const p = document.createElement('p');
-        p.textContent = machineName;
-        notPlayedMachinesDiv.appendChild(p);
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${machineName}</td>`;
+        notPlayedMachinesTableBody.appendChild(row);
     });
 }

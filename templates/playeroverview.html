@@ -9,13 +9,26 @@
     <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="player-overview">
-        <h2>Spielerübersicht</h2>
-        <select id="player-select" onchange="fetchPlayerData()"></select>
-        <h3 id="player-name"></h3>
-        <h4 id="player-abbreviation"></h4>
-        <p id="played-dates"></p>
-        <div id="not-played-machines"></div>
-    </div>
+  <header>
+        <!-- Andere Header-Elemente, falls vorhanden -->
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" id="header-logo">
+  </header>
+   <div class="container">
+       <div class="player-overview">
+            <h2>Spielerübersicht</h2>
+            <select id="player-select" onchange="fetchPlayerData()"></select>
+            <h3 id="player-name"></h3>
+            <h4 id="player-abbreviation"></h4>
+            <p id="played-dates"></p>
+       <table id="not-played-machines-table" class="table-highscores">
+            <thead>
+                <tr>
+                    <th>Nicht gespielte Maschinen</th>
+                </tr>
+            </thead>
+            <tbody id="not-played-machines"></tbody>
+       </table>
+        </div>
+   </div>
 </body>
 </html>
