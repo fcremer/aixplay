@@ -44,7 +44,6 @@ body, html {
     background-color: #D23C29;
 }
 
-
 #total-highscores {
     width: 35%;
     background-color: #ffffff;
@@ -69,7 +68,6 @@ body, html {
     text-align: left;
 }
 
-/* Festlegen der Breite für die Spalten */
 .table-highscores th:nth-child(1), .table-highscores td:nth-child(1) {
     width: 10%;
 }
@@ -83,18 +81,15 @@ body, html {
     text-align: right;
 }
 
-/* Stil für den Tabellenkopf */
 .table-highscores thead {
     background-color: #333;
     color: #fff;
 }
 
-/* Zebra-Streifen für die Tabellenzeilen */
 .table-highscores tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 
-/* Fettgedruckter Text für heutige Spielstände */
 .today-score {
     font-weight: bold;
 }
@@ -117,9 +112,38 @@ select, input, button {
 
 header {
     display: flex;
-    justify-content: flex-end;
-    padding: 10px;
-    background-color: #ffffff;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.menu li {
+    margin-left: 20px;
+}
+
+.menu a {
+    text-decoration: none;
+    color: #333333;
+    transition: color 0.3s ease;
+}
+
+.menu i {
+    font-size: 20px; /* Größe des Icons */
+    color: #333333; /* Farbe des Icons */
+}
+
+.menu a:hover i {
+    color: #D23C29; /* Farbe des Icons beim Hover */
+}
+
+.menu a:hover {
+    color: #D23C29;
 }
 
 #header-logo {
@@ -128,24 +152,23 @@ header {
 
 #pinball-search-container {
     padding: 10px;
-    text-align: center; /* Zentriert das Suchfeld in der Spalte */
+    text-align: center;
 }
 
 #pinball-search {
-    width: 80%; /* Anpassung der Breite des Suchfelds */
-    padding: 8px; /* Gute Größe für das Padding */
-    margin-bottom: 20px; /* Abstand nach unten */
-    font-size: 16px; /* Leicht lesbare Schriftgröße */
-    border: 1px solid #ddd; /* Grenze, die zum Design passt */
-    border-radius: 5px; /* Abgerundete Ecken */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtiler Schatten für Tiefe */
+    width: 80%;
+    padding: 8px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Stil für das Suchfeld bei Fokus */
 #pinball-search:focus {
-    outline: none; /* Entfernt den Standard-Fokusrahmen */
-    border-color: #D23C29; /* Farbe des Rahmens beim Fokus */
-    box-shadow: 0 0 8px rgba(210, 60, 41, 0.6); /* Verstärkter Schatten beim Fokus */
+    outline: none;
+    border-color: #D23C29;
+    box-shadow: 0 0 8px rgba(210, 60, 41, 0.6);
 }
 
 #page-footer {
@@ -157,31 +180,3 @@ header {
     position: fixed;
     bottom: 0;
 }
-
-#progress-bar-container {
-    width: 80%;
-    height: 10px;
-    background-color: #ddd;
-    border-radius: 5px;
-    margin: 0 auto;
-}
-
-#progress-bar {
-    height: 100%;
-    background-color: #D23C29;
-    border-radius: 5px;
-    width: 0%; /* Initialwert */
-}
-
-
-@media (max-width: 768px) {
-    .container {
-        flex-direction: column;
-    }
-
-    #total-highscores, #pinball-highscores {
-        width: 100%;
-    }
-}
-
-
