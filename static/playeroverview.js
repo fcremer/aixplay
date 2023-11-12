@@ -62,4 +62,21 @@ function displayPlayerData(playerData) {
         row.innerHTML = `<td>${machineName}</td>`;
         notPlayedMachinesTableBody.appendChild(row);
     });
+
+    const PlayedMachinesTableBody = document.getElementById('played-machines');
+    PlayedMachinesTableBody.innerHTML = ''; // Leeren des bestehenden Inhalts
+
+    console.log(playerData.played_machines);
+
+    playerData.played_machines.forEach(abbreviation => {
+        const machine = allPinballMachines.find(m => m.abbreviation === abbreviation.machine);
+        const machineName = machine ? machine.long_name : 'Unbekannte Maschine';
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${machineName}</td><td>${abbreviation.rank}</td>`;
+        PlayedMachinesTableBody.appendChild(row);
+
+
+    });
 }
+
+

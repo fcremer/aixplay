@@ -57,20 +57,32 @@ def get_player(player_abbreviation):
 
     played_machines = set()
     played_dates = set()  # Menge für einzigartige Spieltage
+    played_machines_info = []  # Liste für gespielte Maschinen mit Rang
+
     for score in data['scores']:
         if score['player_abbreviation'] == player_abbreviation:
             played_machines.add(score['pinball_abbreviation'])
             played_dates.add(score['date'])  # Fügt das Datum zum Set hinzu
+
+    for machine in played_machines:
+        # Finden aller Scores für jede Maschine
+        machine_scores = [s for s in data['scores'] if s['pinball_abbreviation'] == machine]
+        # Sortieren der Scores in absteigender Reihenfolge
+        machine_scores.sort(key=lambda x: x['points'], reverse=True)
+        # Bestimmen des Rangs des Spielers
+        rank = next((index for index, s in enumerate(machine_scores, start=1) if s['player_abbreviation'] == player_abbreviation), None)
+        played_machines_info.append({'machine': machine, 'rank': rank})
 
     all_machines = set(machine['abbreviation'] for machine in data['pinball_machines'])
     not_played_machines = all_machines - played_machines
 
     return jsonify({
         'player_info': player_info,
-        'played_machines': list(played_machines),
+        'played_machines': played_machines_info,
         'not_played_machines': list(not_played_machines),
         'played_dates': len(played_dates)  # Anzahl der einzigartigen Spieltage
     })
+
 
 
 @app.route('/score', methods=['POST'])
