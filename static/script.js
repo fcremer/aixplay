@@ -2,6 +2,13 @@ document.addEventListener('DOMContentLoaded', function() {
     loadPlayers();
     loadData();
     setInterval(loadData, 60000); // Aktualisiert die Daten jede Minute
+
+    const searchInput = document.getElementById('pinball-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            displayFilteredPinballHighscores(this.value);
+        });
+    }
 });
 
 let playerNamesMap = {};
@@ -112,3 +119,29 @@ function displayPinballHighscores(machine, highscores) {
     container.appendChild(section);
 }
 
+document.getElementById('pinball-search').addEventListener('input', function() {
+    displayFilteredPinballHighscores(this.value);
+});
+
+function displayFilteredPinballHighscores(searchText) {
+    const container = document.getElementById('pinball-highscore-content');
+    container.innerHTML = ''; // Leert den Container vor dem Hinzufügen gefilterter Ergebnisse
+
+    fetch('/pinball')
+        .then(response => response.json())
+        .then(pinballMachines => {
+            // Filtern basierend auf dem Suchtext
+            const filteredMachines = pinballMachines.filter(machine =>
+                machine.long_name.toLowerCase().includes(searchText.toLowerCase())
+            );
+
+            // Anzeigen der gefilterten Highscores
+            filteredMachines.forEach(machine => {
+                fetch(`/highscore/pinball/${machine.abbreviation}`)
+                    .then(response => response.json())
+                    .then(highscores => {
+                        displayPinballHighscores(machine, highscores);
+                    });
+            });
+        });
+}

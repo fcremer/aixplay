@@ -98,6 +98,28 @@ header {
     height: 50px;
 }
 
+#pinball-search-container {
+    padding: 10px;
+    text-align: center; /* Zentriert das Suchfeld in der Spalte */
+}
+
+#pinball-search {
+    width: 80%; /* Anpassung der Breite des Suchfelds */
+    padding: 8px; /* Gute Größe für das Padding */
+    margin-bottom: 20px; /* Abstand nach unten */
+    font-size: 16px; /* Leicht lesbare Schriftgröße */
+    border: 1px solid #ddd; /* Grenze, die zum Design passt */
+    border-radius: 5px; /* Abgerundete Ecken */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtiler Schatten für Tiefe */
+}
+
+/* Stil für das Suchfeld bei Fokus */
+#pinball-search:focus {
+    outline: none; /* Entfernt den Standard-Fokusrahmen */
+    border-color: #D23C29; /* Farbe des Rahmens beim Fokus */
+    box-shadow: 0 0 8px rgba(210, 60, 41, 0.6); /* Verstärkter Schatten beim Fokus */
+}
+
 @media (max-width: 768px) {
     .container {
         flex-direction: column;
@@ -107,3 +129,5 @@ header {
         width: 100%;
     }
 }
+
+
