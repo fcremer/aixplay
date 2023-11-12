@@ -191,7 +191,6 @@ header {
     }
      .table-highscores th, .table-highscores td {
         padding: 5px; /* Kleinere Padding für kleinere Bildschirme */
-        font-size: 14px; /* Kleinere Schriftgröße für bessere Lesbarkeit */
     }
 
     /* Optional: Anpassen der Spaltenbreiten für kleinere Bildschirme */
