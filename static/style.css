@@ -44,6 +44,12 @@ body, html {
     background-color: #e52617;
 }
 
+.submit-button_disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+}
+
 #total-highscores {
     width: 35%;
     background-color: #ffffff;
