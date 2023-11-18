@@ -2,9 +2,15 @@ from flask import Flask, request, jsonify, render_template
 from models import PinballMachine, Player, Score
 from data_manager import load_data, save_data
 import datetime
+import os
+
+
 
 app = Flask(__name__)
 data = load_data()
+
+print( os.environ['GIST_TOKEN'] )
+print("Debug")
 
 @app.route('/')
 

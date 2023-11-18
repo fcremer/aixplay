@@ -10,9 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
 let playerNamesMap = {};
-
 
 function loadPlayers() {
     fetch('/players')
