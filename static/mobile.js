@@ -54,6 +54,8 @@ function submitScore() {
     const pinball = document.getElementById('pinball-select').value;
     const score = document.getElementById('score-input').value;
 
+    console.log(parseInt(score.replaceAll(",","")));
+
     // Ermitteln des heutigen Datums im Format YYYY-MM-DD
     const today = new Date();
     const formattedDate = today.toISOString().split('T')[0];
@@ -66,7 +68,7 @@ function submitScore() {
         body: JSON.stringify({
             player_abbreviation: player,
             pinball_abbreviation: pinball,
-            points: parseInt(score, 10),
+            points: parseInt(score.replaceAll(",","")),
             date: formattedDate
         })
     })
@@ -84,7 +86,7 @@ function formatScoreInput(inputElement) {
     let value = inputElement.value.replace(/[^\d]/g, '').replace(/^0+/, '');
 
     // Teile die Zahl in Gruppen von drei Ziffern
-    value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
     // Setze den formatierten Wert zurück ins Eingabefeld
     inputElement.value = value;
