@@ -1,7 +1,31 @@
 document.addEventListener('DOMContentLoaded', function() {
     loadPlayers();
     loadPinballMachines();
+    setupInputListeners();
+
 });
+
+function setupInputListeners() {
+    document.getElementById('player-select').addEventListener('change', validateInputs);
+    document.getElementById('pinball-select').addEventListener('change', validateInputs);
+    document.getElementById('score-input').addEventListener('input', validateInputs);
+}
+
+function validateInputs() {
+    const player = document.getElementById('player-select').value;
+    const pinball = document.getElementById('pinball-select').value;
+    const score = document.getElementById('score-input').value;
+
+    const submitButton = document.querySelector('.submit-button');
+    if (player && pinball && score) {
+        submitButton.disabled = false;
+        submitButton.classList.remove('submit-button_disabled');
+    } else {
+        submitButton.disabled = true;
+        submitButton.classList.add('submit-button_disabled');
+    }
+}
+
 
 function loadPlayers() {
     fetch('/players')
