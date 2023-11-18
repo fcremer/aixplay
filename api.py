@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify, render_template
 from models import PinballMachine, Player, Score
 from data_manager import load_data, save_data
+from time import sleep
+
 import datetime
 import os
 
@@ -8,9 +10,6 @@ import os
 
 app = Flask(__name__)
 data = load_data()
-
-print( os.environ['GIST_TOKEN'] )
-print("Debug")
 
 @app.route('/')
 
@@ -39,7 +38,10 @@ def add_pinball():
 
 @app.route('/pinball', methods=['GET'])
 def get_pinball_machines():
-    return jsonify(data['pinball_machines'])
+    sorted_pinball_machines = sorted(data['pinball_machines'],
+                                     key=lambda x: x['long_name'],
+                                     reverse=False)
+    return jsonify(sorted_pinball_machines)
 
 @app.route('/player', methods=['POST'])
 def add_player():
@@ -141,9 +143,13 @@ def get_total_highscore():
     all_pinballs = set(score['pinball_abbreviation'] for score in data['scores'])
     for pinball in all_pinballs:
         highscores = calculate_highscores(pinball)
+        #print("Pinball: " + pinball + " Score: " + str(highscores))
         for score in highscores:
             player_scores[score['player']] = player_scores.get(score['player'], 0) + score['points']
+            sleep(0.000005) #ToDo: dirty fix for Full name display bug
+            #print("Player:" + str(score['player']) + " Score: " + str(player_scores[score['player']]) )
 
+    #print(player_scores)
     sorted_scores = sorted(player_scores.items(), key=lambda x: x[1], reverse=True)
 
     total_highscores_with_rank = []
@@ -183,4 +189,4 @@ def calculate_highscores(pinball_abbreviation):
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=False)

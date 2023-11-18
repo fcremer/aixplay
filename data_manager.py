@@ -3,9 +3,9 @@ import os
 import requests
 import json
 
-GIST_ID = "8542e223cdd0ff01905aa79b439927bb"  # Replace with your Gist ID
-TOKEN = "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"  # Replace with your GitHub token
-GIST_FILENAME = "score.yaml"
+GIST_ID = os.environ['GIST_ID']
+TOKEN = os.environ['TOKEN']
+GIST_FILENAME = os.environ['GIST_FILENAME']
 
 headers = {"Authorization": f"token {TOKEN}"}
 
@@ -32,7 +32,6 @@ def update_gist(content):
 def load_data():
     try:
         content = fetch_gist_content()
-       # print("LOAD DEBUG"+content)
         return yaml.safe_load(content)
     except Exception as e:
         return {"pinball_machines": [], "players": [], "scores": []}
@@ -41,6 +40,5 @@ def save_data(data):
     try:
         content = yaml.dump(data)
         update_gist(content)
-        #print("SAVECONTENT: " + data)
     except Exception as e:
         print(f"Error saving data: {e}")

@@ -70,8 +70,8 @@ function fetchPinballHighscores() {
         .then(response => response.json())
         .then(pinballMachines => {
             // Sortieren der Flipperautomaten alphabetisch nach ihrem langen Namen
-            pinballMachines.sort((a, b) => a.long_name.localeCompare(b.long_name));
-
+            // pinballMachines.sort((a, b) => a.long_name.localeCompare(b.long_name));
+            // console.log(pinballMachines)
             // Leeren des Containers für die Highscores der Flipperautomaten
             const container = document.getElementById('pinball-highscore-content');
             container.innerHTML = '';
