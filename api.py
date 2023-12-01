@@ -44,22 +44,23 @@ def bigscreen():
     ]
 
     # Sortieren der Spieler nach der Anzahl der gespielten Maschinen in absteigender Reihenfolge
-    players_table_data.sort(key=lambda x: x['played_machines'], reverse=True)
+    sorted_scores = sorted(data['scores'], key=lambda x: x['date'], reverse=True)[:10]
 
-    # Sortieren der Scores in aufsteigender Reihenfolge und Auswahl der letzten 16 Spiele
-    sorted_scores = sorted(data['scores'], key=lambda x: x['date'])[-16:]
+    # Hinzufügen von Ranginformationen zu jedem Score
+    scores_table_data = []
+    for score in sorted_scores:
+        machine_scores = sorted(
+            [s for s in data['scores'] if s['pinball_abbreviation'] == score['pinball_abbreviation']],
+            key=lambda x: x['points'], reverse=True)
+        rank = next((i + 1 for i, s in enumerate(machine_scores) if
+                     s['player_abbreviation'] == score['player_abbreviation'] and s['points'] == score['points']), "-")
 
-    # Umkehrung der Liste, sodass die jüngsten Spiele zuerst kommen
-    sorted_scores.reverse()
-
-    scores_table_data = [
-        {
+        scores_table_data.append({
             'machine_long_name': pinball_dict.get(score['pinball_abbreviation'], 'Unbekannte Maschine'),
             'player_full_name': player_dict.get(score['player_abbreviation'], 'Unbekannter Spieler'),
-            'points': score['points']
-        }
-        for score in sorted_scores
-    ]
+            'points': score['points'],
+            'rank': rank
+        })
 
     return render_template('bigscreen.html', players_table_data=players_table_data, scores_table_data=scores_table_data)
 
