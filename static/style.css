@@ -6,6 +6,14 @@ body, html {
     color: #333;
 }
 
+.full-width-container {
+    width: 100%; /* Nutzt die volle Breite */
+    background-color: #ffffff; /* Weißer Hintergrund */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Leichter Schatten für Tiefe */
+    margin: 20px 0; /* Vertikaler Abstand oben und unten */
+    padding: 8px; /* Innenabstand */
+}
+
 .container {
     display: flex;
     width: 98%;
@@ -95,6 +103,14 @@ body, html {
 .table-highscores tr:nth-child(even) {
     background-color: #f2f2f2;
 }
+.last-games-table th, .last-games-table td {
+        padding: 15px;
+        text-align: center; /* Zentriert den Text in den Zellen */
+    }
+    .last-games-table {
+        width: 100%; /* Stellt sicher, dass die Tabelle die gesamte Breite nutzt */
+        font-size: 1.2em; /* Größere Schrift für bessere Lesbarkeit */
+    }
 
 .today-score {
     font-weight: bold;
@@ -191,6 +207,12 @@ header {
         flex-direction: column;
     }
 
+    .full-width-container {
+        padding: 10px; /* Reduzierter Innenabstand auf kleinen Bildschirmen */
+        margin: 10px 0; /* Reduzierter vertikaler Abstand */
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Subtilerer Schatten */
+    }
+
     #total-highscores, #pinball-highscores {
         width: 90%;
         margin-bottom: 20px;
@@ -210,5 +232,12 @@ header {
 
     .table-highscores th:nth-child(3), .table-highscores td:nth-child(3) {
         width: 40%; /* Beispielwert */
+    }
+
+        .column {
+        width: 100%; /* Stellt sicher, dass jede Spalte die volle Breite auf kleineren Bildschirmen nutzt */
+    }
+    .last-games-table {
+        font-size: 1em; /* Anpassung der Schriftgröße für mobile Geräte */
     }
 }
