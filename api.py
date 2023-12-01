@@ -21,6 +21,51 @@ def is_score_valid(new_score, scores):
     # For example, check if the score is within a reasonable range compared to other scores for the same pinball machine
     return True
 
+
+@app.route('/bigscreen')
+def bigscreen():
+    # Umwandeln der Spieler- und Pinball-Listen in Wörterbücher für einfachen Zugriff
+    player_dict = {player['abbreviation']: player['name'] for player in data['players']}
+    pinball_dict = {machine['abbreviation']: machine['long_name'] for machine in data['pinball_machines']}
+
+    # Berechnen der Anzahl der von jedem Spieler gespielten Maschinen
+    played_machines_per_player = {player['abbreviation']: 0 for player in data['players']}
+    for score in data['scores']:
+        played_machines_per_player[score['player_abbreviation']] += 1
+
+    # Erstellen der Daten für die erste Tabelle (Spielerstatistiken)
+    players_table_data = [
+        {
+            'name': player['name'],
+            'played_machines': played_machines_per_player[player['abbreviation']],
+            'total_machines': len(data['pinball_machines'])
+        }
+        for player in data['players'] if played_machines_per_player[player['abbreviation']] > 0
+    ]
+
+    # Sortieren der Spieler nach der Anzahl der gespielten Maschinen in absteigender Reihenfolge
+    sorted_scores = sorted(data['scores'], key=lambda x: x['date'], reverse=True)[:10]
+
+    # Hinzufügen von Ranginformationen zu jedem Score
+    scores_table_data = []
+    for score in sorted_scores:
+        machine_scores = sorted(
+            [s for s in data['scores'] if s['pinball_abbreviation'] == score['pinball_abbreviation']],
+            key=lambda x: x['points'], reverse=True)
+        rank = next((i + 1 for i, s in enumerate(machine_scores) if
+                     s['player_abbreviation'] == score['player_abbreviation'] and s['points'] == score['points']), "-")
+
+        scores_table_data.append({
+            'machine_long_name': pinball_dict.get(score['pinball_abbreviation'], 'Unbekannte Maschine'),
+            'player_full_name': player_dict.get(score['player_abbreviation'], 'Unbekannter Spieler'),
+            'points': score['points'],
+            'rank': rank
+        })
+
+    return render_template('bigscreen.html', players_table_data=players_table_data, scores_table_data=scores_table_data)
+
+
+
 @app.route('/mobile')
 def mobile():
     return render_template('mobile.html')

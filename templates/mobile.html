@@ -16,6 +16,8 @@
             <li><a href="/"><i class="fas fa-home"></i></a></li>
             <li><a href="/mobile"><i class="fas fa-plus"></i></a></li>
             <li><a href="/playeroverview"><i class="fas fa-user"></i></a></li>
+            <li><a href="/bigscreen"><i class="fas fa-broadcast-tower"></i></a></li>
+
         </ul>
     </nav>
         <div class="logo">
@@ -23,18 +25,21 @@
         </div>
     </header>
     <div class="container">
-        <div class="score-entry">
-            <h2>Add Score</h2>
-            <select id="player-select" class="score-input">
-                <option value="" disabled selected>select player</option>
-                <!-- Weitere Optionen werden hier hinzugefügt -->
-            </select>
-            <select id="pinball-select" class="score-input">
-                <option value="" disabled selected>select pinball</option>
-                <!-- Weitere Optionen werden hier hinzugefügt -->
-            </select>
-            <input type="tel" id="score-input" class="score-input" placeholder="score" oninput="formatScoreInput(this)">
-            <button onclick="submitScore()" class="submit-button submit-button_disabled" disabled>submit</button>
+        <div class="full-width-container">
+
+            <div class="score-entry">
+                <h2>Add Score</h2>
+                <select id="player-select" class="score-input">
+                    <option value="" disabled selected>select player</option>
+                    <!-- Weitere Optionen werden hier hinzugefügt -->
+                </select>
+                <select id="pinball-select" class="score-input">
+                    <option value="" disabled selected>select pinball</option>
+                    <!-- Weitere Optionen werden hier hinzugefügt -->
+                </select>
+                <input type="tel" id="score-input" class="score-input" placeholder="score" oninput="formatScoreInput(this)">
+                <button onclick="submitScore()" class="submit-button submit-button_disabled" disabled>submit</button>
+            </div>
         </div>
     </div>
 </body>
