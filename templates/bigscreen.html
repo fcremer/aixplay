@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pinball Highscores</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+       <!-- Auto-Refresh alle 30 Sekunden -->
+    <meta http-equiv="refresh" content="30">
+
+</head>
+<body>
+    <header>
+    <nav>
+        <ul class="menu">
+            <li><a href="/"><i class="fas fa-home"></i></a></li>
+            <li><a href="/mobile"><i class="fas fa-plus"></i></a></li>
+            <li><a href="/playeroverview"><i class="fas fa-user"></i></a></li>
+            <li><a href="/bigscreen"><i class="fas fa-broadcast-tower"></i></a></li>
+        </ul>
+    </nav>
+        <div class="logo">
+        <img src="https://www.aixtraball.de/wp-content/uploads/2014/06/logo1.png" alt="Logo" id="header-logo">
+        </div>
+    </header>
+  <body>
+    <div class="full-width-container">
+        <div class="container" style="flex-grow: 1;">
+            <!-- Tabelle 1: Spielerstatistiken -->
+            <div class="column">
+                <h2>Tournament progress</h2>
+                <table class="table-highscores" >
+                    <thead>
+                        <tr>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for player in players_table_data %}
+                            <tr>
+                                <td>{{ player.name }}</td>
+                                <td>{{ player.played_machines }} / {{ player.total_machines }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+<!-- Tabelle 2: Letzte 10 Spiele -->
+<div class="column" style="flex-grow: 1;">
+    <h2>Recent Games</h2>
+    <table class="table-highscores last-games-table">
+        <thead>
+            <tr>
+                <th>Machine</th>
+                <th>Player</th>
+                <th>Score</th>
+                <th>Rank</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for score in scores_table_data %}
+                <tr>
+                    <td>{{ score.machine_long_name }}</td>
+                    <td>{{ score.player_full_name }}</td>
+                    <td>{{ score.points }}</td>
+                    <td>{{ score.rank }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+        </div>
+    </div>
+</body>
+</html>

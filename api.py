@@ -21,6 +21,26 @@ def is_score_valid(new_score, scores):
     # For example, check if the score is within a reasonable range compared to other scores for the same pinball machine
     return True
 
+@app.route('/admin')
+def score_admin():
+    # Laden Sie die notwendigen Daten
+    scores = data['scores']
+    players = {player['abbreviation']: player['name'] for player in data['players']}
+    pinballs = {machine['abbreviation']: machine['long_name'] for machine in data['pinball_machines']}
+
+    # Umwandeln der Scores in ein für das Frontend geeignetes Format
+    scores_display = []
+    for score in scores:
+        scores_display.append({
+          #  'id': score['id'],  # Nehmen Sie an, dass jede Punktzahl eine eindeutige ID hat
+            'player': players.get(score['player_abbreviation'], 'unknown player'),
+            'pinball': pinballs.get(score['pinball_abbreviation'], 'Unknown machine'),
+            'points': score['points'],
+            'date': score['date']
+        })
+
+    return render_template('admin.html', scores=scores_display)
+
 
 @app.route('/bigscreen')
 def bigscreen():
@@ -167,13 +187,23 @@ def get_scores_by_date(date):
     scores = [s for s in data['scores'] if datetime.datetime.strptime(s['date'], '%Y-%m-%d') == date_obj]
     return jsonify(scores), 200
 
-@app.route('/score/<int:id>', methods=['DELETE'])
-def delete_score(id):
-    if id >= len(data['scores']):
+@app.route('/delete_score/<pinball_abbreviation>/<player_abbreviation>/<int:score_value>', methods=['DELETE'])
+def delete_score(pinball_abbreviation, player_abbreviation, score_value):
+    # Finden des entsprechenden Scores
+    score_to_delete = next((score for score in data['scores']
+                            if score['pinball_abbreviation'] == pinball_abbreviation
+                            and score['player_abbreviation'] == player_abbreviation
+                            and score['points'] == score_value), None)
+
+    if score_to_delete:
+        # Score aus der Liste entfernen
+        data['scores'].remove(score_to_delete)
+        save_data(data)
+        return jsonify({"message": "Score deleted"}), 200
+    else:
         return jsonify({"error": "Score not found"}), 404
-    del data['scores'][id]
-    save_data(data)
-    return jsonify({"message": "Score deleted"}), 200
+
+
 
 @app.route('/highscore/pinball/<pinball_abbreviation>', methods=['GET'])
 def get_highscore_by_pinball(pinball_abbreviation):

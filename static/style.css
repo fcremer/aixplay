@@ -25,6 +25,28 @@ body, html {
     padding: 20px;
 }
 
+.edit-button, .delete-button {
+    padding: 5px 10px;
+    margin-right: 5px;
+    border: none;
+    border-radius: 3px;
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.edit-button {
+    background-color: #4CAF50; /* Grün */
+}
+
+.delete-button {
+    background-color: #f44336; /* Rot */
+}
+
+.edit-button:hover, .delete-button:hover {
+    opacity: 0.8;
+}
+
 .score-input {
     width: 100%;
     padding: 10px;
