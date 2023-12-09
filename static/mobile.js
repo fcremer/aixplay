@@ -76,7 +76,8 @@ function groupByRoom(pinballMachines) {
 function submitScore() {
     const player = document.getElementById('player-select').value;
     const pinball = document.getElementById('pinball-select').value;
-    const score = document.getElementById('score-input').value;
+    const scoreInput = document.getElementById('score-input');
+    const score = scoreInput.value;
 
     console.log(parseInt(score.replaceAll(",","")));
 
@@ -98,12 +99,15 @@ function submitScore() {
     })
     .then(response => {
         if (response.ok) {
-            alert('Score erfolgreich gespeichert!');
+            alert('Score submitted successful!');
+            scoreInput.value = ''; // Clear the score input field
+            validateInputs(); // Re-validate inputs to disable the submit button
         } else {
-            alert('Fehler beim Speichern des Scores.');
+            alert('Error submitting score.');
         }
     });
 }
+
 
 function formatScoreInput(inputElement) {
     // Ersetze alle Zeichen außer Zahlen und entferne führende Nullen

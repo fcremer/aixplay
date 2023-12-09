@@ -64,8 +64,10 @@ def bigscreen():
     ]
 
     # Sortieren der Spieler nach der Anzahl der gespielten Maschinen in absteigender Reihenfolge
-    sorted_scores = sorted(data['scores'], key=lambda x: x['date'], reverse=True)[:10]
+    last_15_scores = data['scores'][-15:]
 
+    sorted_scores = last_15_scores[::-1]
+    print(data['scores'])
     # Hinzufügen von Ranginformationen zu jedem Score
     scores_table_data = []
     for score in sorted_scores:
