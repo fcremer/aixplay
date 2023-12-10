@@ -61,6 +61,7 @@ function displayTotalHighscores(data) {
 //            </tr>
 //        </thead>
 //    `;
+    table.innerHTML = ''; // Entfernt den aktuellen Inhalt der Tabelle
     table.appendChild(tbody);
 }
 
@@ -70,22 +71,27 @@ function fetchPinballHighscores() {
         .then(response => response.json())
         .then(pinballMachines => {
             // Sortieren der Flipperautomaten alphabetisch nach ihrem langen Namen
-            // pinballMachines.sort((a, b) => a.long_name.localeCompare(b.long_name));
-            // console.log(pinballMachines)
-            // Leeren des Containers für die Highscores der Flipperautomaten
-            const container = document.getElementById('pinball-highscore-content');
-            container.innerHTML = '';
+            pinballMachines.sort((a, b) => a.long_name.localeCompare(b.long_name));
 
             // Highscores für jeden Flipperautomaten abrufen
-            pinballMachines.forEach(machine => {
+            const highscorePromises = pinballMachines.map(machine =>
                 fetch(`/highscore/pinball/${machine.abbreviation}`)
                     .then(response => response.json())
-                    .then(highscores => {
-                        displayPinballHighscores(machine, highscores);
-                    });
+                    .then(highscores => ({ machine, highscores }))
+            );
+
+            return Promise.all(highscorePromises);
+        })
+        .then(allHighscores => {
+            const container = document.getElementById('pinball-highscore-content');
+            container.innerHTML = ''; // Leeren des Containers
+
+            allHighscores.forEach(({ machine, highscores }) => {
+                displayPinballHighscores(machine, highscores);
             });
         });
 }
+
 
 function displayPinballHighscores(machine, highscores) {
     const container = document.getElementById('pinball-highscore-content');
@@ -111,7 +117,7 @@ function displayPinballHighscores(machine, highscores) {
         `;
         tbody.appendChild(row);
     });
-
+    //container.innerHTML = ''; // Löscht den aktuellen Inhalt
     table.appendChild(tbody);
     section.appendChild(table);
     container.appendChild(section);

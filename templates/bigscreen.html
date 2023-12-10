@@ -49,30 +49,30 @@
                 </table>
             </div>
 
-<!-- Tabelle 2: Letzte 10 Spiele -->
-<div class="column" style="flex-grow: 1;">
-    <h2>Recent Games</h2>
-    <table class="table-highscores last-games-table">
-        <thead>
-            <tr>
-                <th>Machine</th>
-                <th>Player</th>
-                <th>Score</th>
-                <th>Rank</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for score in scores_table_data %}
-                <tr>
-                    <td>{{ score.machine_long_name }}</td>
-                    <td>{{ score.player_full_name }}</td>
-                    <td>{{ score.points }}</td>
-                    <td>{{ score.rank }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+           <!-- Tabelle 2: Letzte 10 Spiele -->
+            <div class="column" style="flex-grow: 1;">
+                <h2>Recent Games</h2>
+                <table class="table-highscores last-games-table">
+                    <thead>
+                        <tr>
+                            <th>Machine</th>
+                            <th>Player</th>
+                            <th>Score</th>
+                            <th>Rank</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for score in scores_table_data %}
+                            <tr>
+                                <td>{{ score.machine_long_name }}</td>
+                                <td>{{ score.player_full_name }}</td>
+                                <td>{{ "{:,}".format(score.points) }}</td>
+                                <td>{{ score.rank }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </body>
