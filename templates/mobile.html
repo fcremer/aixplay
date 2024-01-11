@@ -8,40 +8,56 @@
     <script src="{{ url_for('static', filename='mobile.js') }}"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .score-overview {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .score-overview p {
+            margin: 5px 0;
+        }
+    </style>
 </head>
 <body>
     <header>
-    <nav>
-        <ul class="menu">
-            <li><a href="/"><i class="fas fa-home"></i></a></li>
-            <li><a href="/mobile"><i class="fas fa-plus"></i></a></li>
-            <li><a href="/playeroverview"><i class="fas fa-user"></i></a></li>
-            <li><a href="/bigscreen"><i class="fas fa-broadcast-tower"></i></a></li>
-
-        </ul>
-    </nav>
+        <nav>
+            <ul class="menu">
+                <li><a href="/"><i class="fas fa-home"></i></a></li>
+                <li><a href="/mobile"><i class="fas fa-plus"></i></a></li>
+                <li><a href="/playeroverview"><i class="fas fa-user"></i></a></li>
+                <li><a href="/bigscreen"><i class="fas fa-broadcast-tower"></i></a></li>
+            </ul>
+        </nav>
         <div class="logo">
-        <img src="https://www.aixtraball.de/wp-content/uploads/2014/06/logo1.png" alt="Logo" id="header-logo">
+            <img src="https://www.aixtraball.de/wp-content/uploads/2014/06/logo1.png" alt="Logo" id="header-logo">
         </div>
     </header>
     <div class="container">
         <div class="full-width-container">
-
             <div class="score-entry">
                 <h2>Add Score</h2>
                 <select id="player-select" class="score-input">
-                    <option value="" disabled selected>select player</option>
-                    <!-- Weitere Optionen werden hier hinzugefügt -->
+                    <option value="" disabled selected>Select player</option>
+                    <!-- Player options will be added here -->
                 </select>
                 <select id="pinball-select" class="score-input">
-                    <option value="" disabled selected>select pinball</option>
-                    <!-- Weitere Optionen werden hier hinzugefügt -->
+                    <option value="" disabled selected>Select pinball</option>
+                    <!-- Pinball options will be added here -->
                 </select>
-                <input type="tel" id="score-input" class="score-input" placeholder="score" oninput="formatScoreInput(this)">
-                <button onclick="submitScore()" class="submit-button submit-button_disabled" disabled>submit</button>
+                <input type="tel" id="score-input" class="score-input" placeholder="Score" oninput="formatScoreInput(this)">
+                <button onclick="submitScore()" class="submit-button submit-button_disabled" disabled>Submit</button>
+            </div>
+
+            <!-- Bereich für die Score-Übersicht -->
+            <div id="score-overview" class="score-overview">
+                <!-- Score-Informationen werden hier angezeigt -->
             </div>
         </div>
     </div>
 </body>
 </html>
-

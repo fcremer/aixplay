@@ -8,27 +8,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-       <!-- Auto-Refresh alle 30 Sekunden -->
     <meta http-equiv="refresh" content="30">
-
 </head>
 <body>
     <header>
-    <nav>
-        <ul class="menu">
-            <li><a href="/"><i class="fas fa-home"></i></a></li>
-            <li><a href="/mobile"><i class="fas fa-plus"></i></a></li>
-            <li><a href="/playeroverview"><i class="fas fa-user"></i></a></li>
-            <li><a href="/bigscreen"><i class="fas fa-broadcast-tower"></i></a></li>
-        </ul>
-    </nav>
+        <nav>
+            <ul class="menu">
+                <li><a href="/"><i class="fas fa-home"></i></a></li>
+                <li><a href="/mobile"><i class="fas fa-plus"></i></a></li>
+                <li><a href="/playeroverview"><i class="fas fa-user"></i></a></li>
+                <li><a href="/bigscreen"><i class="fas fa-broadcast-tower"></i></a></li>
+            </ul>
+        </nav>
         <div class="logo">
-        <img src="https://www.aixtraball.de/wp-content/uploads/2014/06/logo1.png" alt="Logo" id="header-logo">
+            <img src="https://www.aixtraball.de/wp-content/uploads/2014/06/logo1.png" alt="Logo" id="header-logo">
         </div>
     </header>
-<body>
-    <!-- Navigationsmenü und Header wie in Ihrer Beispielseite -->
-        <h2>Score Administration</h2>
+
+    <button id="reload-data-button">Reload data</button>
+    <h2>Score Administration</h2>
 
     <div class="container">
         <table class="table-highscores">
@@ -50,28 +48,35 @@
                     <td>{{ score.date }}</td>
                     <td>
                         <a href="/edit_score/{{ score.id }}" class="edit-button">edit</a>
-<button onclick="deleteScore('{{ score.pinball_abbreviation }}', '{{ score.player_abbreviation }}', {{ score.points }})">Löschen</button>
-
-<script>
-function deleteScore(pinballAbbreviation, playerAbbreviation, scoreValue) {
-console.log("pinballAbbreviation");
-    fetch(`/delete_score/${pinballAbbreviation}/${playerAbbreviation}/${scoreValue}`, {
-        method: 'DELETE',
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        // Aktualisieren Sie die Seite oder entfernen Sie den gelöschten Score aus der Tabelle
-    })
-    .catch(error => console.error('Error:', error));
-}
-</script>                    </td>
+                        <button onclick="deleteScore('{{ score.pinball_abbreviation }}', '{{ score.player_abbreviation }}', {{ score.points }})">Löschen</button>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 
-    <!-- Footer wie in Ihrer Beispielseite -->
+    <script>
+        function deleteScore(pinballAbbreviation, playerAbbreviation, scoreValue) {
+            fetch(`/delete_score/${pinballAbbreviation}/${playerAbbreviation}/${scoreValue}`, {
+                method: 'DELETE',
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                // Aktualisieren Sie die Seite oder entfernen Sie den gelöschten Score aus der Tabelle
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        document.getElementById('reload-data-button').addEventListener('click', function() {
+            loadPlayers();
+            loadData();
+        });
+    </script>
+
+    <footer id="page-footer">
+        <!-- Ihr Footer-Inhalt -->
+    </footer>
 </body>
 </html>

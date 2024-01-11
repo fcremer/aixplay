@@ -2,6 +2,9 @@ document.addEventListener('DOMContentLoaded', function() {
     loadPlayers();
     loadPinballMachines();
     setupInputListeners();
+    // Rufen Sie diese Funktion auf, wenn sich die Auswahl ändert
+document.getElementById('player-select').addEventListener('change', loadScoreOverview);
+document.getElementById('pinball-select').addEventListener('change', loadScoreOverview);
 
 });
 
@@ -118,6 +121,27 @@ function formatScoreInput(inputElement) {
 
     // Setze den formatierten Wert zurück ins Eingabefeld
     inputElement.value = value;
+}
+
+function loadScoreOverview() {
+    const player = document.getElementById('player-select').value;
+    const pinball = document.getElementById('pinball-select').value;
+
+    if (player && pinball) {
+        fetch(`/score-overview/${pinball}/${player}`)
+            .then(response => response.json())
+            .then(data => {
+                const minScoreFormatted = data.minScore ? data.minScore.toLocaleString() : 'not scored yet';
+                const maxScoreFormatted = data.maxScore ? data.maxScore.toLocaleString() : 'not scored yet';
+                const playerScoreFormatted = data.playerScore ? data.playerScore.toLocaleString() : 'not scored yet';
+
+                document.getElementById('score-overview').innerHTML = `
+                    Minimum Score: ${minScoreFormatted} <br>
+                    Grand Champion: ${maxScoreFormatted} <br>
+                    Personal Best: ${playerScoreFormatted}
+                `;
+            });
+    }
 }
 
 
