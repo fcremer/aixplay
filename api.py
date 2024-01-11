@@ -25,21 +25,34 @@ def score_overview(pinball, player):
     if not pinball_scores:
         return jsonify({'minScore': None, 'maxScore': None, 'playerScore': None})
 
-    # Get the minimum and maximum scores for the pinball machine
-    min_score = min(pinball_scores, key=lambda x: x['points'])['points']
-    max_score = max(pinball_scores, key=lambda x: x['points'])['points']
+    # Determine the highest score per player
+    highest_scores_per_player = {}
+    for score in pinball_scores:
+        player_abbr = score['player_abbreviation']
+        if player_abbr not in highest_scores_per_player or highest_scores_per_player[player_abbr] < score['points']:
+            highest_scores_per_player[player_abbr] = score['points']
 
-    # Filter scores for the selected player at the selected pinball machine
-    player_scores = [score['points'] for score in pinball_scores if score['player_abbreviation'] == player]
+    # Create a list of highest scores for the pinball machine
+    highest_scores = list(highest_scores_per_player.values())
 
-    # If the player has scores on this machine, get their latest score, otherwise None
-    player_latest_score = player_scores[-1] if player_scores else None
+    # Sort the scores in descending order
+    highest_scores.sort(reverse=True)
+
+    # Determine min_score based on the number of scores
+    min_score = highest_scores[14] if len(highest_scores) > 15 else min(highest_scores)
+
+    # Get the maximum score for the pinball machine
+    max_score = max(highest_scores)
+
+    # Determine the latest score for the requested player
+    player_latest_score = highest_scores_per_player.get(player, None)
 
     return jsonify({
         'minScore': min_score,
         'maxScore': max_score,
         'playerScore': player_latest_score
     })
+
 
 
 def is_score_valid(pinball_abbreviation, new_score, scores_data):
