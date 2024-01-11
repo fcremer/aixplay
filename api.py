@@ -16,10 +16,89 @@ data = load_data()
 def index():
     return render_template('index.html')
 
-def is_score_valid(new_score, scores):
-    # Implement logic to validate the score
-    # For example, check if the score is within a reasonable range compared to other scores for the same pinball machine
-    return True
+@app.route('/score-overview/<pinball>/<player>')
+def score_overview(pinball, player):
+    # Filter scores for the selected pinball machine
+    pinball_scores = [score for score in data['scores'] if score['pinball_abbreviation'] == pinball]
+
+    # If no scores found for the pinball, return empty data
+    if not pinball_scores:
+        return jsonify({'minScore': None, 'maxScore': None, 'playerScore': None})
+
+    # Get the minimum and maximum scores for the pinball machine
+    min_score = min(pinball_scores, key=lambda x: x['points'])['points']
+    max_score = max(pinball_scores, key=lambda x: x['points'])['points']
+
+    # Filter scores for the selected player at the selected pinball machine
+    player_scores = [score['points'] for score in pinball_scores if score['player_abbreviation'] == player]
+
+    # If the player has scores on this machine, get their latest score, otherwise None
+    player_latest_score = player_scores[-1] if player_scores else None
+
+    return jsonify({
+        'minScore': min_score,
+        'maxScore': max_score,
+        'playerScore': player_latest_score
+    })
+
+
+def is_score_valid(pinball_abbreviation, new_score, scores_data):
+    """
+    Validates a new score for a specific pinball machine.
+
+    Args:
+    pinball_abbreviation (str): Abbreviation of the pinball machine.
+    new_score (int): The new score to be validated.
+    scores_data (list of dict): List of scores data dictionaries.
+
+    Returns:
+    bool: True if the score is valid, False otherwise.
+    """
+    # Filter scores for the specific pinball machine
+    filtered_scores = [score['points'] for score in scores_data if score['pinball_abbreviation'] == pinball_abbreviation]
+
+    # Ensure there are at least 5 scores to compare with
+    if len(filtered_scores) < 5:
+        return True  # Not enough data to validate
+
+    # Calculate the average of the existing scores
+    avg_score = sum(filtered_scores) / len(filtered_scores)
+    print("avg"+str(avg_score))
+    # Check if the new score deviates by more than 50% from the average
+    return new_score <= 1.5 * avg_score
+
+@app.route('/validate_score', methods=['POST'])
+def validate_score():
+    # Daten aus der POST-Anfrage extrahieren
+    body = request.json
+    pinball_abbreviation = body.get('pinball_abbreviation')
+    new_score = body.get('new_score')
+
+    # Stellen Sie sicher, dass die erforderlichen Daten vorhanden sind
+    if not all([pinball_abbreviation, new_score]):
+        return jsonify({'error': 'Missing data'}), 400
+
+    # Filtern Sie die vorhandenen Scores und überprüfen Sie, ob sie die erforderlichen Schlüssel enthalten
+    filtered_scores = [score for score in data['scores']
+                       if 'pinball_abbreviation' in score and 'score' in score
+                       and score['pinball_abbreviation'] == pinball_abbreviation]
+
+    if not filtered_scores:
+        return jsonify({'error': 'No valid existing scores for given abbreviation'}), 404
+
+    # Ermitteln Sie den besten (höchsten) Score für die gegebene pinball_abbreviation
+    best_score = max(filtered_scores, key=lambda x: x['score'])['score']
+
+    # Berechnen Sie die Abweichung des neuen Scores vom besten Score
+    deviation = new_score - best_score
+
+    # Rufen Sie Ihre Validierungsfunktion mit der Abweichung auf
+    is_valid = is_score_valid(pinball_abbreviation, new_score, deviation)
+
+    # Rückgabe des Ergebnisses
+    return jsonify({'is_valid': is_valid})
+
+
 
 @app.route('/admin')
 def score_admin():

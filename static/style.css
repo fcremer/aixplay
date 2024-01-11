@@ -263,3 +263,15 @@ header {
         font-size: 1em; /* Anpassung der Schriftgröße für mobile Geräte */
     }
 }
+.score-overview {
+    text-align: center; /* Zentriert den Text innerhalb des Elements */
+    margin-top: 20px; /* Fügt einen Abstand nach oben hinzu */
+    padding: 10px; /* Fügt innen Padding hinzu */
+    border: 1px solid #ddd; /* Optional: Fügt einen Rand hinzu */
+    border-radius: 5px; /* Optional: Rundet die Ecken des Rahmens */
+    background-color: #f9f9f9; /* Optional: Hintergrundfarbe */
+}
+
+.score-overview p {
+    margin: 5px 0; /* Abstände zwischen den Paragraphen */
+}
