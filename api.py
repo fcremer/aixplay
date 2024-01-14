@@ -207,11 +207,39 @@ def get_pinball_machines():
     return jsonify(sorted_pinball_machines)
 
 @app.route('/player', methods=['POST'])
+@app.route('/player', methods=['POST'])
 def add_player():
-    new_player = Player(**request.json)
+    body = request.json
+    name = body.get('name')
+
+    # Aufteilen des Namens in Vor- und Nachname
+    name_parts = name.split()
+    first_name = name_parts[0]
+    last_name = name_parts[-1] if len(name_parts) > 1 else ''
+
+    # Generierung der Abkürzung
+    abbreviation = generate_unique_abbreviation(first_name, last_name, data['players'])
+
+    new_player = Player(name=name, abbreviation=abbreviation)
     data['players'].append(vars(new_player))
     save_data(data)
-    return jsonify({"message": "Player added"}), 201
+    return jsonify({"message": "Player added", "abbreviation": abbreviation}), 201
+
+def generate_unique_abbreviation(first_name, last_name, players):
+    base_abbreviation = first_name[0] + last_name[:1]  # Standardabkürzung: Erster Buchstabe des Vornamens und des Nachnamens
+    abbreviation = base_abbreviation.upper()
+    existing_abbreviations = {player['abbreviation'] for player in players}
+    counter = 1
+
+    # Erzeugen einer einzigartigen Abkürzung
+    while abbreviation in existing_abbreviations:
+        # Anpassen der Abkürzung mit zusätzlichen Buchstaben aus dem Nachnamen
+        abbreviation = (first_name[0] + last_name[:counter + 1]).upper()
+        counter += 1
+
+    return abbreviation
+
+
 
 @app.route('/players', methods=['GET'])
 def get_players():

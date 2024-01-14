@@ -29,7 +29,6 @@
     <h3>Add New Player</h3>
     <form id="newPlayerForm">
         <input type="text" id="playerName" name="name" placeholder="Player Name" required>
-        <input type="text" id="playerAbbreviation" name="abbreviation" placeholder="Abbreviation" required>
         <button type="submit">Add Player</button>
     </form>
 </div>
@@ -38,14 +37,13 @@
     document.getElementById('newPlayerForm').addEventListener('submit', function(event) {
         event.preventDefault();
         const playerName = document.getElementById('playerName').value;
-        const playerAbbreviation = document.getElementById('playerAbbreviation').value;
 
         fetch('/player', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ name: playerName, abbreviation: playerAbbreviation }),
+            body: JSON.stringify({ name: playerName }),
         })
         .then(response => response.json())
         .then(data => {
@@ -62,8 +60,8 @@
         <table class="table-highscores">
             <thead>
                 <tr>
-                    <th>Pinball</th>
                     <th>Player</th>
+                    <th>Pinball</th>
                     <th>Score</th>
                     <th>Date</th>
                     <th>Action</th>
@@ -77,7 +75,7 @@
                     <td>{{ score.points }}</td>
                     <td>{{ score.date }}</td>
                     <td>
-                        <button onclick="deleteScore('{{ score.pinball_abbreviation }}', '{{ score.player_abbreviation }}', {{ score.points }})">Delete</button>
+                        <button class="delete-button" onclick="deleteScore('{{ score.pinball_abbreviation }}', '{{ score.player_abbreviation }}', {{ score.points }})">Delete</button>
                     </td>
                 </tr>
                 {% endfor %}
