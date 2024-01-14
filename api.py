@@ -300,7 +300,7 @@ def get_highscore_by_pinball(pinball_abbreviation):
 
 
 
-@app.route('/total_highscore', methods=[fix 'GET'])
+@app.route('/total_highscore', methods=['GET'])
 def get_total_highscore():
     player_scores = {}
     all_pinballs = set(score['pinball_abbreviation'] for score in data['scores'])
