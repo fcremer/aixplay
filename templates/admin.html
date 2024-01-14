@@ -24,6 +24,38 @@
             <img src="https://www.aixtraball.de/wp-content/uploads/2014/06/logo1.png" alt="Logo" id="header-logo">
         </div>
     </header>
+    <h2>Player Administration</h2>
+    <div class="add-player-form">
+    <h3>Add New Player</h3>
+    <form id="newPlayerForm">
+        <input type="text" id="playerName" name="name" placeholder="Player Name" required>
+        <input type="text" id="playerAbbreviation" name="abbreviation" placeholder="Abbreviation" required>
+        <button type="submit">Add Player</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('newPlayerForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const playerName = document.getElementById('playerName').value;
+        const playerAbbreviation = document.getElementById('playerAbbreviation').value;
+
+        fetch('/player', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name: playerName, abbreviation: playerAbbreviation }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            // Feedback für den Benutzer, z.B. Meldung anzeigen, dass der Spieler hinzugefügt wurde
+            window.location.reload(); // Seite neu laden
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
     <h2>Score Administration</h2>
 
     <div class="container">
