@@ -124,14 +124,19 @@ def score_admin():
     scores_display = []
     for score in scores:
         scores_display.append({
-          #  'id': score['id'],  # Nehmen Sie an, dass jede Punktzahl eine eindeutige ID hat
             'player': players.get(score['player_abbreviation'], 'unknown player'),
             'pinball': pinballs.get(score['pinball_abbreviation'], 'Unknown machine'),
+            'pinball_abbreviation': score['pinball_abbreviation'],
             'points': score['points'],
-            'date': score['date']
+            'date': score['date'],
+            'player_abbreviation': score['player_abbreviation']
         })
 
+    # Sortieren der Scores nach Datum absteigend
+    scores_display.sort(key=lambda x: x['date'], reverse=True)
+
     return render_template('admin.html', scores=scores_display)
+
 
 
 @app.route('/bigscreen')

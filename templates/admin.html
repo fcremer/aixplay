@@ -24,8 +24,6 @@
             <img src="https://www.aixtraball.de/wp-content/uploads/2014/06/logo1.png" alt="Logo" id="header-logo">
         </div>
     </header>
-
-    <button id="reload-data-button">Reload data</button>
     <h2>Score Administration</h2>
 
     <div class="container">
@@ -33,22 +31,21 @@
             <thead>
                 <tr>
                     <th>Pinball</th>
-                    <th>Spieler</th>
+                    <th>Player</th>
                     <th>Score</th>
-                    <th>Datum</th>
-                    <th>Aktionen</th>
+                    <th>Date</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 {% for score in scores %}
                 <tr>
-                    <td>{{ score }}</td>
-                    <td>{{ score.player }}</td>
+                    <td>{{ score.player }} - {{ score.player_abbreviation }}</td>
+                    <td>{{ score.pinball }} - {{ score.pinball_abbreviation }}</td>
                     <td>{{ score.points }}</td>
                     <td>{{ score.date }}</td>
                     <td>
-                        <a href="/edit_score/{{ score.id }}" class="edit-button">edit</a>
-                        <button onclick="deleteScore('{{ score.pinball_abbreviation }}', '{{ score.player_abbreviation }}', {{ score.points }})">Löschen</button>
+                        <button onclick="deleteScore('{{ score.pinball_abbreviation }}', '{{ score.player_abbreviation }}', {{ score.points }})">Delete</button>
                     </td>
                 </tr>
                 {% endfor %}
@@ -57,22 +54,20 @@
     </div>
 
     <script>
-        function deleteScore(pinballAbbreviation, playerAbbreviation, scoreValue) {
+       function deleteScore(pinballAbbreviation, playerAbbreviation, scoreValue) {
             fetch(`/delete_score/${pinballAbbreviation}/${playerAbbreviation}/${scoreValue}`, {
                 method: 'DELETE',
             })
             .then(response => response.json())
             .then(data => {
                 console.log(data);
-                // Aktualisieren Sie die Seite oder entfernen Sie den gelöschten Score aus der Tabelle
+                // Sie könnten hier die Seite neu laden oder den gelöschten Score dynamisch aus der Tabelle entfernen
+                if (data.message === "Score deleted") {
+                    window.location.reload(); // Seite neu laden
+                }
             })
             .catch(error => console.error('Error:', error));
         }
-
-        document.getElementById('reload-data-button').addEventListener('click', function() {
-            loadPlayers();
-            loadData();
-        });
     </script>
 
     <footer id="page-footer">
