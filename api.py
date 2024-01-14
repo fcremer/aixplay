@@ -140,26 +140,25 @@ def bigscreen():
     player_dict = {player['abbreviation']: player['name'] for player in data['players']}
     pinball_dict = {machine['abbreviation']: machine['long_name'] for machine in data['pinball_machines']}
 
-    # Berechnen der Anzahl der von jedem Spieler gespielten Maschinen
-    played_machines_per_player = {player['abbreviation']: 0 for player in data['players']}
+    # Berechnen der Anzahl der von jedem Spieler gespielten einzigartigen Maschinen
+    played_machines_per_player = {player['abbreviation']: set() for player in data['players']}
     for score in data['scores']:
-        played_machines_per_player[score['player_abbreviation']] += 1
+        played_machines_per_player[score['player_abbreviation']].add(score['pinball_abbreviation'])
 
     # Erstellen der Daten für die erste Tabelle (Spielerstatistiken)
     players_table_data = [
         {
             'name': player['name'],
-            'played_machines': played_machines_per_player[player['abbreviation']],
+            'played_machines': len(played_machines_per_player[player['abbreviation']]),
             'total_machines': len(data['pinball_machines'])
         }
-        for player in data['players'] if played_machines_per_player[player['abbreviation']] > 0
+        for player in data['players'] if len(played_machines_per_player[player['abbreviation']]) > 0
     ]
 
     # Sortieren der Spieler nach der Anzahl der gespielten Maschinen in absteigender Reihenfolge
     last_15_scores = data['scores'][-15:]
 
     sorted_scores = last_15_scores[::-1]
-    print(data['scores'])
     # Hinzufügen von Ranginformationen zu jedem Score
     scores_table_data = []
     for score in sorted_scores:
@@ -253,9 +252,6 @@ def get_player(player_abbreviation):
         'played_dates': len(played_dates)  # Anzahl der einzigartigen Spieltage
     })
 
-
-
-
 @app.route('/score', methods=['POST'])
 def add_score():
     new_score = Score(**request.json)
@@ -304,21 +300,22 @@ def get_highscore_by_pinball(pinball_abbreviation):
 
 
 
-@app.route('/total_highscore', methods=['GET'])
+@app.route('/total_highscore', methods=[fix 'GET'])
 def get_total_highscore():
     player_scores = {}
     all_pinballs = set(score['pinball_abbreviation'] for score in data['scores'])
     for pinball in all_pinballs:
         highscores = calculate_highscores(pinball)
         #print("Pinball: " + pinball + " Score: " + str(highscores))
+        #print(highscores)
         for score in highscores:
             player_scores[score['player']] = player_scores.get(score['player'], 0) + score['points']
             sleep(0.000005) #ToDo: dirty fix for Full name display bug
-            #print("Player:" + str(score['player']) + " Score: " + str(player_scores[score['player']]) )
+            #if str(score['player']) == "FC":
+            #    print("Player:" + str(score['player']) + " Sum: " + str(player_scores[score['player']]) + " " + str(score['points']) +" at Pin: " + pinball )
 
     #print(player_scores)
     sorted_scores = sorted(player_scores.items(), key=lambda x: x[1], reverse=True)
-
     total_highscores_with_rank = []
     rank = 1
     for player, points in sorted_scores:
