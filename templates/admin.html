@@ -26,7 +26,7 @@
     </header>
     <h2>Player Administration</h2>
     <div class="add-player-form">
-    <h3>Add New Player</h3>
+    <h3>Add Player</h3>
     <form id="newPlayerForm">
         <input type="text" id="playerName" name="name" placeholder="Player Name" required>
         <button type="submit">Add Player</button>
@@ -44,6 +44,39 @@
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ name: playerName }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            // Feedback für den Benutzer, z.B. Meldung anzeigen, dass der Spieler hinzugefügt wurde
+            window.location.reload(); // Seite neu laden
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
+        <h2>Pinball Administration</h2>
+    <div class="add-pinball-form">
+    <h3>Add Pinball</h3>
+    <form id="newPinballForm">
+        <input type="text" id="PinballName" name="name" placeholder="Pinball Name" required>
+        <input type="text" id="PinballAbbreviation" name="abbreviation" placeholder="Pinball Code" required>
+        <button type="submit">Add Pinball</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('newPinballForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const PinballName = document.getElementById('PinballName').value;
+        const PinballAbbreviation = document.getElementById('PinballAbbreviation').value;
+
+
+        fetch('/pinball', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ long_name: PinballName,  abbreviation: PinballAbbreviation, room: "1" }),
         })
         .then(response => response.json())
         .then(data => {

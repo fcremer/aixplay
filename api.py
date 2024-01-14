@@ -124,19 +124,14 @@ def score_admin():
     scores_display = []
     for score in scores:
         scores_display.append({
+          #  'id': score['id'],  # Nehmen Sie an, dass jede Punktzahl eine eindeutige ID hat
             'player': players.get(score['player_abbreviation'], 'unknown player'),
             'pinball': pinballs.get(score['pinball_abbreviation'], 'Unknown machine'),
-            'pinball_abbreviation': score['pinball_abbreviation'],
             'points': score['points'],
-            'date': score['date'],
-            'player_abbreviation': score['player_abbreviation']
+            'date': score['date']
         })
 
-    # Sortieren der Scores nach Datum absteigend
-    scores_display.sort(key=lambda x: x['date'], reverse=True)
-
     return render_template('admin.html', scores=scores_display)
-
 
 
 @app.route('/bigscreen')
@@ -207,39 +202,11 @@ def get_pinball_machines():
     return jsonify(sorted_pinball_machines)
 
 @app.route('/player', methods=['POST'])
-@app.route('/player', methods=['POST'])
 def add_player():
-    body = request.json
-    name = body.get('name')
-
-    # Aufteilen des Namens in Vor- und Nachname
-    name_parts = name.split()
-    first_name = name_parts[0]
-    last_name = name_parts[-1] if len(name_parts) > 1 else ''
-
-    # Generierung der Abkürzung
-    abbreviation = generate_unique_abbreviation(first_name, last_name, data['players'])
-
-    new_player = Player(name=name, abbreviation=abbreviation)
+    new_player = Player(**request.json)
     data['players'].append(vars(new_player))
     save_data(data)
-    return jsonify({"message": "Player added", "abbreviation": abbreviation}), 201
-
-def generate_unique_abbreviation(first_name, last_name, players):
-    base_abbreviation = first_name[0] + last_name[:1]  # Standardabkürzung: Erster Buchstabe des Vornamens und des Nachnamens
-    abbreviation = base_abbreviation.upper()
-    existing_abbreviations = {player['abbreviation'] for player in players}
-    counter = 1
-
-    # Erzeugen einer einzigartigen Abkürzung
-    while abbreviation in existing_abbreviations:
-        # Anpassen der Abkürzung mit zusätzlichen Buchstaben aus dem Nachnamen
-        abbreviation = (first_name[0] + last_name[:counter + 1]).upper()
-        counter += 1
-
-    return abbreviation
-
-
+    return jsonify({"message": "Player added"}), 201
 
 @app.route('/players', methods=['GET'])
 def get_players():
