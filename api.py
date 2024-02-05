@@ -129,7 +129,9 @@ def score_admin():
             'player': players.get(score['player_abbreviation'], 'unknown player'),
             'pinball': pinballs.get(score['pinball_abbreviation'], 'Unknown machine'),
             'points': score['points'],
-            'date': score['date']
+            'date': score['date'],
+            'player_abbreviation': score['player_abbreviation'],
+            'pinball_abbreviation': score['pinball_abbreviation']
         })
 
     return render_template('admin.html', scores=scores_display)

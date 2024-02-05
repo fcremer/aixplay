@@ -108,7 +108,7 @@
                     <td>{{ score.points }}</td>
                     <td>{{ score.date }}</td>
                     <td>
-                        <button class="delete-button" onclick="deleteScore('{{ score.pinball_abbreviation }}', '{{ score.player_abbreviation }}', {{ score.points }})">Delete</button>
+                        <button class="delete-button" onclick="deleteScore('{{ score.pinball_abbreviation }}', '{{ score.player_abbreviation }}', '{{ score.points }}')">Delete</button>
                     </td>
                 </tr>
                 {% endfor %}
