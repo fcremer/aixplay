@@ -57,6 +57,11 @@ body, html {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
+#score-input:focus {
+    outline: none;
+    border-color: #e52617;
+    box-shadow: 0 0 8px rgba(210, 60, 41, 0.6);
+}
 
 .submit-button {
     width: 100%;

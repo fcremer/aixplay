@@ -24,31 +24,91 @@
             <img src="https://www.aixtraball.de/wp-content/uploads/2014/06/logo1.png" alt="Logo" id="header-logo">
         </div>
     </header>
+    <h2>Player Administration</h2>
+    <div class="add-player-form">
+    <h3>Add Player</h3>
+    <form id="newPlayerForm">
+        <input type="text" id="playerName" name="name" placeholder="Player Name" required>
+        <button type="submit">Add Player</button>
+    </form>
+</div>
 
-    <button id="reload-data-button">Reload data</button>
+<script>
+    document.getElementById('newPlayerForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const playerName = document.getElementById('playerName').value;
+
+        fetch('/player', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name: playerName }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            // Feedback für den Benutzer, z.B. Meldung anzeigen, dass der Spieler hinzugefügt wurde
+            window.location.reload(); // Seite neu laden
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
+        <h2>Pinball Administration</h2>
+    <div class="add-pinball-form">
+    <h3>Add Pinball</h3>
+    <form id="newPinballForm">
+        <input type="text" id="PinballName" name="name" placeholder="Pinball Name" required>
+        <input type="text" id="PinballAbbreviation" name="abbreviation" placeholder="Pinball Code" required>
+        <button type="submit">Add Pinball</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('newPinballForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const PinballName = document.getElementById('PinballName').value;
+        const PinballAbbreviation = document.getElementById('PinballAbbreviation').value;
+
+
+        fetch('/pinball', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ long_name: PinballName,  abbreviation: PinballAbbreviation, room: "1" }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            // Feedback für den Benutzer, z.B. Meldung anzeigen, dass der Spieler hinzugefügt wurde
+            window.location.reload(); // Seite neu laden
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
     <h2>Score Administration</h2>
 
     <div class="container">
         <table class="table-highscores">
             <thead>
                 <tr>
+                    <th>Player</th>
                     <th>Pinball</th>
-                    <th>Spieler</th>
                     <th>Score</th>
-                    <th>Datum</th>
-                    <th>Aktionen</th>
+                    <th>Date</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 {% for score in scores %}
                 <tr>
-                    <td>{{ score }}</td>
-                    <td>{{ score.player }}</td>
+                    <td>{{ score.player }} - {{ score.player_abbreviation }}</td>
+                    <td>{{ score.pinball }} - {{ score.pinball_abbreviation }}</td>
                     <td>{{ score.points }}</td>
                     <td>{{ score.date }}</td>
                     <td>
-                        <a href="/edit_score/{{ score.id }}" class="edit-button">edit</a>
-                        <button onclick="deleteScore('{{ score.pinball_abbreviation }}', '{{ score.player_abbreviation }}', {{ score.points }})">Löschen</button>
+                        <button class="delete-button" onclick="deleteScore('{{ score.pinball_abbreviation }}', '{{ score.player_abbreviation }}', {{ score.points }})">Delete</button>
                     </td>
                 </tr>
                 {% endfor %}
@@ -57,22 +117,20 @@
     </div>
 
     <script>
-        function deleteScore(pinballAbbreviation, playerAbbreviation, scoreValue) {
+       function deleteScore(pinballAbbreviation, playerAbbreviation, scoreValue) {
             fetch(`/delete_score/${pinballAbbreviation}/${playerAbbreviation}/${scoreValue}`, {
                 method: 'DELETE',
             })
             .then(response => response.json())
             .then(data => {
                 console.log(data);
-                // Aktualisieren Sie die Seite oder entfernen Sie den gelöschten Score aus der Tabelle
+                // Sie könnten hier die Seite neu laden oder den gelöschten Score dynamisch aus der Tabelle entfernen
+                if (data.message === "Score deleted") {
+                    window.location.reload(); // Seite neu laden
+                }
             })
             .catch(error => console.error('Error:', error));
         }
-
-        document.getElementById('reload-data-button').addEventListener('click', function() {
-            loadPlayers();
-            loadData();
-        });
     </script>
 
     <footer id="page-footer">
