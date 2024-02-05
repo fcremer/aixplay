@@ -119,6 +119,7 @@ def score_admin():
     scores = data['scores']
     players = {player['abbreviation']: player['name'] for player in data['players']}
     pinballs = {machine['abbreviation']: machine['long_name'] for machine in data['pinball_machines']}
+    scores.sort(key=lambda x: datetime.datetime.strptime(x['date'], '%Y-%m-%d'), reverse=True)
 
     # Umwandeln der Scores in ein für das Frontend geeignetes Format
     scores_display = []
