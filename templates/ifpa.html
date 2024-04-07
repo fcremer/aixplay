@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pinball Highscores</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="logo">
+        <img src="https://www.aixtraball.de/wp-content/uploads/2014/06/logo1.png" alt="Logo" id="header-logo">
+        </div>
+    </header>
+    <div class="container">
+        <div id="total-highscores" class="column">
+            <h2>Season Highscore</h2>
+            <div id="total-highscore-list"></div>
+        </div>
+
+        <div id="pinball-highscores" class="column">
+            <h2>Machine Highscores</h2>
+            <div id="pinball-search-container">
+                <input type="text" id="pinball-search" placeholder="Machine search...">
+            </div>
+            <div id="pinball-highscore-content"></div>
+            <div id="players-container"></div>
+        </div>
+    </div>
+
+<footer id="page-footer">
+    <div id="progress-bar-container">
+        <div id="progress-bar"></div>
+    </div>
+</footer>
+
+</body>
+</html>

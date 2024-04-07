@@ -12,9 +12,12 @@ app = Flask(__name__)
 data = load_data()
 
 @app.route('/')
-
 def index():
     return render_template('index.html')
+
+@app.route('/ifpa')
+def ifpa():
+    return render_template('ifpa.html')
 
 @app.route('/score-overview/<pinball>/<player>')
 def score_overview(pinball, player):
