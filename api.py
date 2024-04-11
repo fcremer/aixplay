@@ -357,6 +357,5 @@ def calculate_highscores(pinball_abbreviation):
         points -= 1 if points > 1 else 0
     return highscores_with_points
 
-
-if __name__ == "__main__":
-    app.run(debug=True)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=3000)
