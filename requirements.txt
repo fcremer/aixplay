@@ -2,3 +2,4 @@ Flask
 PyYAML
 requests
 urllib3==1.26.6
+flask_cors

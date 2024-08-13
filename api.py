@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, render_template
+from flask_cors import CORS
 from models import PinballMachine, Player, Score
 from data_manager import load_data, save_data
 from time import sleep
@@ -9,6 +10,7 @@ import os
 
 
 app = Flask(__name__)
+CORS(app)
 data = load_data()
 
 @app.route('/')
@@ -356,6 +358,40 @@ def calculate_highscores(pinball_abbreviation):
         })
         points -= 1 if points > 1 else 0
     return highscores_with_points
+
+
+@app.route('/latestscores', methods=['GET'])
+@app.route('/latestscores', methods=['GET'])
+def get_latest_scores():
+    # Get today's date in 'YYYY-MM-DD' format
+    today = datetime.datetime.now().strftime('%Y-%m-%d')
+
+    # Filter scores for today's date
+    today_scores = [score for score in data['scores'] if score['date'] == today]
+
+    # Prepare the response list
+    latest_scores_response = []
+
+    # For each score submitted today, calculate rank using calculate_highscores
+    for score in today_scores:
+        pinball_abbreviation = score['pinball_abbreviation']
+        player_abbreviation = score['player_abbreviation']
+
+        # Calculate highscores for the pinball machine
+        highscores = calculate_highscores(pinball_abbreviation)
+
+        # Find the rank of the player in today's score within the high scores
+        rank = next((i + 1 for i, hs in enumerate(highscores) if hs['player'] == player_abbreviation), None)
+
+        latest_scores_response.append({
+            'player': player_abbreviation,
+            'pinball': pinball_abbreviation,
+            'points': score['points'],
+            'date': score['date'],
+            'rank': rank  # Include the calculated rank in the output
+        })
+
+    return jsonify(latest_scores_response), 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3000)
