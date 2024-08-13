@@ -393,5 +393,56 @@ def get_latest_scores():
 
     return jsonify(latest_scores_response), 200
 
+@app.route('/matchsuggestion', methods=['GET'])
+def match_suggestion():
+    # Get today's date in 'YYYY-MM-DD' format
+    today = datetime.datetime.now().strftime('%Y-%m-%d')
+
+    # Identify active players based on today's scores
+    today_scores = [score for score in data['scores'] if score['date'] == today]
+    active_players = {score['player_abbreviation'] for score in today_scores}
+
+    # Determine unplayed machines for each active player
+    player_unplayed_machines = {}
+    for player_abbr in active_players:
+        player_data_response = get_player(player_abbr)
+        player_data = player_data_response.json
+        if 'not_played_machines' in player_data:
+            player_unplayed_machines[player_abbr] = player_data['not_played_machines']
+
+    # Prepare match suggestions based on unplayed machines
+    match_suggestions = []
+    all_pinball_machines = set(machine['abbreviation'] for machine in data['pinball_machines'])
+
+    # Track the number of suggestions per player
+    suggestions_count = {player: 0 for player in active_players}
+
+    # Try to assign two players for each machine
+    for machine in all_pinball_machines:
+        # Get players who have not played this machine and have fewer than 2 suggestions
+        players_for_machine = [player for player, machines in player_unplayed_machines.items()
+                               if machine in machines and suggestions_count[player] < 2]
+
+        # Ensure there are at least two players who haven't played the machine
+        if len(players_for_machine) >= 2:
+            player1, player2 = players_for_machine[:2]  # Take the first two players
+            match_suggestions.append({
+                'pinball': machine,
+                'player1': player1,
+                'player2': player2
+            })
+
+            # Increment suggestion counts
+            suggestions_count[player1] += 1
+            suggestions_count[player2] += 1
+
+            # Remove players if they reached their maximum suggestions
+            if suggestions_count[player1] >= 2:
+                del player_unplayed_machines[player1]
+            if suggestions_count[player2] >= 2:
+                del player_unplayed_machines[player2]
+
+    return jsonify(match_suggestions), 200
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3000)
