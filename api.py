@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, render_template
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from models import PinballMachine, Player, Score
 from data_manager import load_data, save_data
 from time import sleep
@@ -12,6 +12,7 @@ import os
 app = Flask(__name__)
 CORS(app)
 data = load_data()
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 @app.route('/')
 def index():
