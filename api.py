@@ -10,9 +10,8 @@ import os
 
 
 app = Flask(__name__)
-#CORS(app)
+
 data = load_data()
-#app.config['CORS_HEADERS'] = 'Content-Type'
 
 @app.route('/')
 def index():
@@ -443,6 +442,30 @@ def match_suggestion():
                 del player_unplayed_machines[player2]
 
     return jsonify(match_suggestions), 200
+
+@app.route('/getfreescores', methods=['GET'])
+def getfreescores():
+    # Create a dictionary to count scores for each pinball machine
+    score_counts = {}
+    # Count the number of scores for each pinball machine
+    for score in data['scores']:
+        pinball_abbr = score['pinball_abbreviation']
+        if pinball_abbr in score_counts:
+            score_counts[pinball_abbr] += 1
+        else:
+            score_counts[pinball_abbr] = 1
+        print(pinball_abbr +" "+ str(score_counts[pinball_abbr]))
+
+    # Identify machines with fewer than 15 scores
+    easy_machines = [abbr for abbr, count in score_counts.items() if count < 14]
+    # Ensure to include machines with zero scores
+    all_machines = {machine['abbreviation'] for machine in data['pinball_machines']}
+    machines_with_few_scores = set(easy_machines)
+    # Combine machines with few scores and no scores
+    result = list(machines_with_few_scores)
+
+    return jsonify(result), 200
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3000)
