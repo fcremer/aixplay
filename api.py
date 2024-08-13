@@ -10,9 +10,9 @@ import os
 
 
 app = Flask(__name__)
-CORS(app)
+#CORS(app)
 data = load_data()
-app.config['CORS_HEADERS'] = 'Content-Type'
+#app.config['CORS_HEADERS'] = 'Content-Type'
 
 @app.route('/')
 def index():
