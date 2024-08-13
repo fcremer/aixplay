@@ -443,6 +443,26 @@ def match_suggestion():
 
     return jsonify(match_suggestions), 200
 
+@app.route('/matchsuggestion/<player1>/<player2>', methods=['GET'])
+def match_suggestion_for_players(player1, player2):
+    # Retrieve unplayed machines for player1
+    player1_data_response = get_player(player1)
+    player1_data = player1_data_response.json
+    if 'not_played_machines' not in player1_data:
+        return jsonify({'error': f'Player {player1} not found or data unavailable'}), 404
+
+    # Retrieve unplayed machines for player2
+    player2_data_response = get_player(player2)
+    player2_data = player2_data_response.json
+    if 'not_played_machines' not in player2_data:
+        return jsonify({'error': f'Player {player2} not found or data unavailable'}), 404
+
+    # Find common unplayed machines for both players
+    player1_unplayed = set(player1_data['not_played_machines'])
+    player2_unplayed = set(player2_data['not_played_machines'])
+    common_unplayed_machines = list(player1_unplayed.intersection(player2_unplayed))
+
+    return jsonify({'common_unplayed_machines': common_unplayed_machines}), 200
 @app.route('/getfreescores', methods=['GET'])
 def getfreescores():
     # Create a dictionary to count scores for each pinball machine
