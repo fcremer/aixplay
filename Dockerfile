@@ -17,7 +17,6 @@ COPY . .
 # Set environment variables for Flask
 ENV FLASK_APP=app.py
 ENV FLASK_RUN_HOST=0.0.0.0
-ENV FLASK_ENV=production  # Set to "development" if you need to enable debug mode
-
+ENV FLASK_ENV=production
 # Run the application
 CMD ["flask", "run"]
