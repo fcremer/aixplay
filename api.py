@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, render_template
+from flask_cors import CORS, cross_origin
 from models import PinballMachine, Player, Score
 from data_manager import load_data, save_data
 from time import sleep
@@ -9,6 +10,7 @@ import os
 
 
 app = Flask(__name__)
+
 data = load_data()
 
 @app.route('/')
@@ -358,5 +360,132 @@ def calculate_highscores(pinball_abbreviation):
     return highscores_with_points
 
 
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, debug=False)
+@app.route('/latestscores', methods=['GET'])
+def get_latest_scores():
+    # Get today's date in 'YYYY-MM-DD' format
+    today = datetime.datetime.now().strftime('%Y-%m-%d')
+
+    # Filter scores for today's date
+    today_scores = [score for score in data['scores'] if score['date'] == today]
+
+    # Prepare the response list
+    latest_scores_response = []
+
+    # For each score submitted today, calculate rank using calculate_highscores
+    for score in today_scores:
+        pinball_abbreviation = score['pinball_abbreviation']
+        player_abbreviation = score['player_abbreviation']
+
+        # Calculate highscores for the pinball machine
+        highscores = calculate_highscores(pinball_abbreviation)
+
+        # Find the rank of the player in today's score within the high scores
+        rank = next((i + 1 for i, hs in enumerate(highscores) if hs['player'] == player_abbreviation), None)
+
+        latest_scores_response.append({
+            'player': player_abbreviation,
+            'pinball': pinball_abbreviation,
+            'points': score['points'],
+            'date': score['date'],
+            'rank': rank  # Include the calculated rank in the output
+        })
+
+    return jsonify(latest_scores_response), 200
+
+@app.route('/matchsuggestion', methods=['GET'])
+def match_suggestion():
+    # Get today's date in 'YYYY-MM-DD' format
+    today = datetime.datetime.now().strftime('%Y-%m-%d')
+
+    # Identify active players based on today's scores
+    today_scores = [score for score in data['scores'] if score['date'] == today]
+    active_players = {score['player_abbreviation'] for score in today_scores}
+
+    # Determine unplayed machines for each active player
+    player_unplayed_machines = {}
+    for player_abbr in active_players:
+        player_data_response = get_player(player_abbr)
+        player_data = player_data_response.json
+        if 'not_played_machines' in player_data:
+            player_unplayed_machines[player_abbr] = player_data['not_played_machines']
+
+    # Prepare match suggestions based on unplayed machines
+    match_suggestions = []
+    all_pinball_machines = set(machine['abbreviation'] for machine in data['pinball_machines'])
+
+    # Track the number of suggestions per player
+    suggestions_count = {player: 0 for player in active_players}
+
+    # Try to assign two players for each machine
+    for machine in all_pinball_machines:
+        # Get players who have not played this machine and have fewer than 2 suggestions
+        players_for_machine = [player for player, machines in player_unplayed_machines.items()
+                               if machine in machines and suggestions_count[player] < 2]
+
+        # Ensure there are at least two players who haven't played the machine
+        if len(players_for_machine) >= 2:
+            player1, player2 = players_for_machine[:2]  # Take the first two players
+            match_suggestions.append({
+                'pinball': machine,
+                'player1': player1,
+                'player2': player2
+            })
+
+            # Increment suggestion counts
+            suggestions_count[player1] += 1
+            suggestions_count[player2] += 1
+
+            # Remove players if they reached their maximum suggestions
+            if suggestions_count[player1] >= 2:
+                del player_unplayed_machines[player1]
+            if suggestions_count[player2] >= 2:
+                del player_unplayed_machines[player2]
+
+    return jsonify(match_suggestions), 200
+
+@app.route('/matchsuggestion/<player1>/<player2>', methods=['GET'])
+def match_suggestion_for_players(player1, player2):
+    # Retrieve unplayed machines for player1
+    player1_data_response = get_player(player1)
+    player1_data = player1_data_response.json
+    if 'not_played_machines' not in player1_data:
+        return jsonify({'error': f'Player {player1} not found or data unavailable'}), 404
+
+    # Retrieve unplayed machines for player2
+    player2_data_response = get_player(player2)
+    player2_data = player2_data_response.json
+    if 'not_played_machines' not in player2_data:
+        return jsonify({'error': f'Player {player2} not found or data unavailable'}), 404
+
+    # Find common unplayed machines for both players
+    player1_unplayed = set(player1_data['not_played_machines'])
+    player2_unplayed = set(player2_data['not_played_machines'])
+    common_unplayed_machines = list(player1_unplayed.intersection(player2_unplayed))
+
+    return jsonify({'common_unplayed_machines': common_unplayed_machines}), 200
+@app.route('/getfreescores', methods=['GET'])
+def getfreescores():
+    # Create a dictionary to count scores for each pinball machine
+    score_counts = {}
+    # Count the number of scores for each pinball machine
+    for score in data['scores']:
+        pinball_abbr = score['pinball_abbreviation']
+        if pinball_abbr in score_counts:
+            score_counts[pinball_abbr] += 1
+        else:
+            score_counts[pinball_abbr] = 1
+        print(pinball_abbr +" "+ str(score_counts[pinball_abbr]))
+
+    # Identify machines with fewer than 15 scores
+    easy_machines = [abbr for abbr, count in score_counts.items() if count < 14]
+    # Ensure to include machines with zero scores
+    all_machines = {machine['abbreviation'] for machine in data['pinball_machines']}
+    machines_with_few_scores = set(easy_machines)
+    # Combine machines with few scores and no scores
+    result = list(machines_with_few_scores)
+
+    return jsonify(result), 200
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=3000)
