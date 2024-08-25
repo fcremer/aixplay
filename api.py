@@ -334,24 +334,46 @@ def get_total_highscore():
 
 def calculate_highscores(pinball_abbreviation):
     scores_by_player = {}
+
+    # Create a dictionary to quickly lookup if a player is a guest
+    player_guest_status = {player['abbreviation']: player.get('guest', False) for player in data['players']}
+
     for score in data['scores']:
         if score['pinball_abbreviation'] == pinball_abbreviation:
-            if score['player_abbreviation'] not in scores_by_player or \
-                    scores_by_player[score['player_abbreviation']]['points'] < score['points']:
-                scores_by_player[score['player_abbreviation']] = score
+            player_abbreviation = score['player_abbreviation']
 
+            # Track the highest score for each player
+            if player_abbreviation not in scores_by_player or \
+                    scores_by_player[player_abbreviation]['points'] < score['points']:
+                scores_by_player[player_abbreviation] = score
+
+    # Convert the dictionary to a list and sort by points in descending order
     highscores = list(scores_by_player.values())
     highscores.sort(key=lambda x: x['points'], reverse=True)
 
+    # Assign ranking points, ignoring guest players for the purpose of point distribution
     highscores_with_points = []
     points = 15
-    for score in highscores[:15]:
-        highscores_with_points.append({
-            'player': score['player_abbreviation'],
-            'score': score['points'],
-            'points': points
-        })
-        points -= 1 if points > 1 else 0
+    for score in highscores:
+        player_abbreviation = score['player_abbreviation']
+        is_guest = player_guest_status.get(player_abbreviation, False)
+
+        # Assign points normally, but do not decrement points for guest players
+        if not is_guest:
+            highscores_with_points.append({
+                'player': player_abbreviation,
+                'score': score['points'],
+                'points': points
+            })
+            points -= 1 if points > 1 else 0
+        else:
+            # Guests get the points they would have if they were not a guest
+            highscores_with_points.append({
+                'player': player_abbreviation,
+                'score': score['points'],
+                'points': points
+            })
+
     return highscores_with_points
 
 @app.route('/player/<player_abbreviation>', methods=['GET'])
