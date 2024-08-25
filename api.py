@@ -354,6 +354,37 @@ def calculate_highscores(pinball_abbreviation):
         points -= 1 if points > 1 else 0
     return highscores_with_points
 
+@app.route('/player/<player_abbreviation>', methods=['GET'])
+def print_scores_by_player(player_abbreviation):
+    # Fetch all scores for the specified player
+    scores = [s for s in data['scores'] if s['player_abbreviation'] == player_abbreviation]
+
+    if not scores:
+        return jsonify({"error": f"No scores found for player '{player_abbreviation}'"}), 404
+
+    # Print the scores to the console
+    print(f"Scores for player '{player_abbreviation}':")
+    for score in scores:
+        print(f"Pinball: {score['pinball_abbreviation']}, Score: {score['points']}, Date: {score['date']}")
+
+    # Return the scores as a JSON response
+    return jsonify(scores), 200
+
+@app.route('/player/<player_abbreviation>', methods=['DELETE'])
+def delete_player(player_abbreviation):
+    # Find and delete all scores associated with the player
+    data['scores'] = [score for score in data['scores'] if score['player_abbreviation'] != player_abbreviation]
+
+    # Find and delete the player from the list of players
+    player_to_delete = next((player for player in data['players'] if player['abbreviation'] == player_abbreviation), None)
+
+    if player_to_delete:
+        data['players'].remove(player_to_delete)
+        save_data(data)  # Save the updated data after deletion
+        return jsonify({"message": f"Player '{player_abbreviation}' and their scores deleted"}), 200
+    else:
+        return jsonify({"error": "Player not found"}), 404
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=False)
