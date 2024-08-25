@@ -6,9 +6,10 @@ class PinballMachine:
         self.room = room
 
 class Player:
-    def __init__(self, name, abbreviation=None):
+    def __init__(self, name, abbreviation=None, guest=None):
         self.name = name
         self.abbreviation = abbreviation
+        self.guest = guest
 
 class Score:
     def __init__(self, player_abbreviation, pinball_abbreviation, points, date):

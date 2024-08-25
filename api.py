@@ -385,6 +385,17 @@ def delete_player(player_abbreviation):
     else:
         return jsonify({"error": "Player not found"}), 404
 
+@app.route('/purgeguests', methods=['DELETE'])
+def delete_all_guests():
+    # Find all guest players (where 'guest' is True or exists and is True)
+    guest_players = [player for player in data['players'] if player.get('guest') is True]
+
+    # Iterate through the list of guest players and delete them
+    for guest in guest_players:
+        delete_player(guest['abbreviation'])
+
+    return jsonify({"message": f"{len(guest_players)} guest players deleted"}), 200
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=False)
