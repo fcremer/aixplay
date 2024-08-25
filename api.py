@@ -396,6 +396,24 @@ def delete_all_guests():
 
     return jsonify({"message": f"{len(guest_players)} guest players deleted"}), 200
 
+@app.route('/pinball/<pinball_abbreviation>', methods=['DELETE'])
+def delete_pinball_machine(pinball_abbreviation):
+    # Step 1: Delete all scores related to the pinball machine
+    global data  # Ensuring we're modifying the global `data` object
+    original_score_count = len(data['scores'])
+    data['scores'] = [score for score in data['scores'] if score['pinball_abbreviation'] != pinball_abbreviation]
+    deleted_scores_count = original_score_count - len(data['scores'])
+
+    # Step 2: Delete the pinball machine itself
+    pinball_to_delete = next((machine for machine in data['pinball_machines'] if machine['abbreviation'] == pinball_abbreviation), None)
+
+    if pinball_to_delete:
+        data['pinball_machines'].remove(pinball_to_delete)
+        save_data(data)  # Save the updated data after deletion
+        return jsonify({"message": f"Pinball machine '{pinball_abbreviation}' and {deleted_scores_count} related scores deleted"}), 200
+    else:
+        return jsonify({"error": "Pinball machine not found"}), 404
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=False)
