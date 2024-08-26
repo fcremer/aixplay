@@ -347,49 +347,7 @@ def get_total_highscore():
     return jsonify(total_highscores_with_rank), 200
 
 
-def calculate_highscores(pinball_abbreviation):
-    scores_by_player = {}
 
-    # Create a dictionary to quickly lookup if a player is a guest
-    player_guest_status = {player['abbreviation']: player.get('guest', False) for player in data['players']}
-
-    for score in data['scores']:
-        if score['pinball_abbreviation'] == pinball_abbreviation:
-            player_abbreviation = score['player_abbreviation']
-
-            # Track the highest score for each player
-            if player_abbreviation not in scores_by_player or \
-                    scores_by_player[player_abbreviation]['points'] < score['points']:
-                scores_by_player[player_abbreviation] = score
-
-    # Convert the dictionary to a list and sort by points in descending order
-    highscores = list(scores_by_player.values())
-    highscores.sort(key=lambda x: x['points'], reverse=True)
-
-    # Assign ranking points, ignoring guest players for the purpose of point distribution
-    highscores_with_points = []
-    points = 15
-    for score in highscores:
-        player_abbreviation = score['player_abbreviation']
-        is_guest = player_guest_status.get(player_abbreviation, False)
-
-        # Assign points normally, but do not decrement points for guest players
-        if not is_guest:
-            highscores_with_points.append({
-                'player': player_abbreviation,
-                'score': score['points'],
-                'points': points
-            })
-            points -= 1 if points > 1 else 0
-        else:
-            # Guests get the points they would have if they were not a guest
-            highscores_with_points.append({
-                'player': player_abbreviation,
-                'score': score['points'],
-                'points': points
-            })
-
-    return highscores_with_points
 
 @app.route('/player/<player_abbreviation>', methods=['GET'])
 def print_scores_by_player(player_abbreviation):
@@ -407,6 +365,65 @@ def print_scores_by_player(player_abbreviation):
     # Return the scores as a JSON response
     return jsonify(scores), 200
 
+
+def calculate_highscores(pinball_abbreviation):
+    scores_by_player = {}
+
+    # Create a dictionary to quickly lookup if a player is a guest
+    player_guest_status = {player['abbreviation']: player.get('guest', False) for player in data['players']}
+
+    # Track the highest score for each player for the specific pinball machine
+    for score in data['scores']:
+        if score['pinball_abbreviation'] == pinball_abbreviation:
+            player_abbreviation = score['player_abbreviation']
+
+            if player_abbreviation not in scores_by_player or \
+                    scores_by_player[player_abbreviation]['points'] < score['points']:
+                scores_by_player[player_abbreviation] = score
+
+    # Convert the dictionary to a list and sort by points in descending order
+    highscores = list(scores_by_player.values())
+    highscores.sort(key=lambda x: x['points'], reverse=True)
+
+    # Assign ranking points, ensuring players with the same points get the same rank
+    highscores_with_rank_and_points = []
+    points = 15
+    rank = 1
+    previous_points = None
+    previous_rank = 1  # Keep track of the previous rank to ensure correct rank sharing
+
+    for score in highscores:
+        player_abbreviation = score['player_abbreviation']
+        is_guest = player_guest_status.get(player_abbreviation, False)
+
+        # If the current player's points are different from the previous player's points, update the rank
+        if previous_points is not None and score['points'] != previous_points:
+            previous_rank = rank  # Update previous rank to the current rank
+
+        # Ensure players ranked lower than 15 receive 0 points
+        assigned_points = points if rank <= 15 else 0
+
+        score_entry = {
+            'player': player_abbreviation,
+            'score': score['points'],
+            'rank': previous_rank,
+            'points': assigned_points
+        }
+
+        if is_guest:
+            score_entry['guest'] = True
+
+        highscores_with_rank_and_points.append(score_entry)
+
+        previous_points = score['points']
+        if not is_guest:
+            rank += 1
+
+        # Only decrement points if the player is not a guest and rank is within the top 15
+        if not is_guest and rank <= 15:
+            points -= 1 if points > 1 else 0
+
+    return highscores_with_rank_and_points
 @app.route('/player/<player_abbreviation>', methods=['DELETE'])
 def delete_player(player_abbreviation):
     # Find and delete all scores associated with the player
