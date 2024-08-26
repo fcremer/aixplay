@@ -218,43 +218,53 @@ def get_players():
 
 @app.route('/get_player/<player_abbreviation>', methods=['GET'])
 def get_player(player_abbreviation):
-    # Findet den angegebenen Spieler in der Datenliste
+    # Find the specified player in the data list
     player_info = next((player for player in data['players'] if player['abbreviation'] == player_abbreviation), None)
 
     if player_info is None:
-        return jsonify({'error': 'Spieler nicht gefunden'}), 404
+        return jsonify({'error': 'Player not found'}), 404
 
+    # Initialize sets for played machines and dates
     played_machines = set()
-    played_dates = set()  # Menge für einzigartige Spieltage
-    played_machines_info = []  # Liste für gespielte Maschinen mit Rang
+    played_dates = set()  # Set for unique play dates
+    played_machines_info = []  # List for played machines with rank
 
+    # Loop through the scores to find machines played by the player
     for score in data['scores']:
         if score['player_abbreviation'] == player_abbreviation:
             played_machines.add(score['pinball_abbreviation'])
-            played_dates.add(score['date'])  # Fügt das Datum zum Set hinzu
+            played_dates.add(score['date'])  # Add the date to the set
 
+    # Collect information about the played machines and their ranks
     for machine in played_machines:
-        # Finden aller Scores für jede Maschine
+        # Find all scores for each machine
         machine_scores = [s for s in data['scores'] if s['pinball_abbreviation'] == machine]
-        # Sortieren der Scores in absteigender Reihenfolge
+        # Sort the scores in descending order
         machine_scores.sort(key=lambda x: x['points'], reverse=True)
-        # Bestimmen des Rangs des Spielers
+        # Determine the rank of the player
         rank = next((index for index, s in enumerate(machine_scores, start=1) if s['player_abbreviation'] == player_abbreviation), None)
         played_machines_info.append({'machine': machine, 'rank': rank})
 
-    # Sortieren der gespielten Maschinen nach Rang in absteigender Reihenfolge
+    # Sort the played machines by rank in descending order
     played_machines_info.sort(key=lambda x: x['rank'], reverse=True)
 
+    # Calculate tournament progress
+    total_machines = len(data['pinball_machines'])
+    machines_with_score = len(played_machines)
+    tournament_progress = f"{machines_with_score}/{total_machines}"
+
+    # Get the list of machines not yet played by the player
     all_machines = set(machine['abbreviation'] for machine in data['pinball_machines'])
     not_played_machines = all_machines - played_machines
 
+    # Return the extended player information
     return jsonify({
         'player_info': player_info,
         'played_machines': played_machines_info,
         'not_played_machines': list(not_played_machines),
-        'played_dates': len(played_dates)  # Anzahl der einzigartigen Spieltage
+        'played_dates': len(played_dates),  # Number of unique play dates
+        'tournament_progress': tournament_progress  # Tournament progress in the format "X/Y"
     })
-
 @app.route('/score', methods=['POST'])
 def add_score():
     new_score = Score(**request.json)
